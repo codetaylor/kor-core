@@ -30,8 +30,10 @@ public abstract class KorWorldGen implements
 
   private int modGenerationWeight;
   private IntMap<List<DimensionProfileWorldGenPair>> worldGenMap;
+  private float chancePerSpawn;
 
   private class DimensionProfileWorldGenPair {
+
     WorldGenMinable worldGenMinable;
     DimensionProfile dimensionProfile;
 
@@ -39,11 +41,13 @@ public abstract class KorWorldGen implements
       this.worldGenMinable = worldGenMinable;
       this.dimensionProfile = dimensionProfile;
     }
+
   }
 
   protected KorWorldGen(KorOreGenConfig config, IBlockState defaultState) {
     this.modGenerationWeight = config.getModGenerationWeight();
     this.worldGenMap = new IntMap<>();
+    this.chancePerSpawn = 1.0f;
 
     for (DimensionProfile dimensionProfile : config.getDimensionProfileList()) {
       int dimensionId = dimensionProfile.getDimensionId();
@@ -63,6 +67,10 @@ public abstract class KorWorldGen implements
           dimensionProfile
       ));
     }
+  }
+
+  public void setChancePerSpawn(float chancePerSpawn) {
+    this.chancePerSpawn = chancePerSpawn;
   }
 
   @Override
@@ -100,15 +108,19 @@ public abstract class KorWorldGen implements
         int range = max - min + 1;
 
         for (int i = 0; i < spawnsPerChunk; i++) {
-          worldGenMinable.generate(
-              world,
-              random,
-              chunkPos.add(
-                  random.nextInt(16),
-                  random.nextInt(range) + min,
-                  random.nextInt(16)
-              )
-          );
+
+          if (random.nextFloat() < this.chancePerSpawn) {
+
+            worldGenMinable.generate(
+                world,
+                random,
+                chunkPos.add(
+                    random.nextInt(16),
+                    random.nextInt(range) + min,
+                    random.nextInt(16)
+                )
+            );
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 package com.sudoplay.mc.kor.core.config.text;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -8,37 +8,19 @@ import java.util.Map;
  */
 public class TextConfigData {
 
-  private Map<String, Integer> integerMap;
-  private Map<String, Boolean> booleanMap;
-  private Map<String, String> stringMap;
+  private Map<String, TextConfigDataEntry> categoryMap;
 
   /* package */ TextConfigData() {
-    this.integerMap = new HashMap<>();
-    this.booleanMap = new HashMap<>();
-    this.stringMap = new HashMap<>();
+    this.categoryMap = new LinkedHashMap<>();
   }
 
-  public void putInteger(String key, int value) {
-    this.integerMap.put(key, value);
-  }
+  public TextConfigDataEntry getCategory(String name) {
+    TextConfigDataEntry category = this.categoryMap.get(name);
 
-  public Integer getInteger(String key) {
-    return this.integerMap.get(key);
-  }
-
-  public void putBoolean(String key, boolean value) {
-    this.booleanMap.put(key, value);
-  }
-
-  public Boolean getBoolean(String key) {
-    return this.booleanMap.get(key);
-  }
-
-  public void putString(String key, String value) {
-    this.stringMap.put(key, value);
-  }
-
-  public String getString(String key) {
-    return this.stringMap.get(key);
+    if (category == null) {
+      category = new TextConfigDataEntry();
+      this.categoryMap.put(name, category);
+    }
+    return category;
   }
 }

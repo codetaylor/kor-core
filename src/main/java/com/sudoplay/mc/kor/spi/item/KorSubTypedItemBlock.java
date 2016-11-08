@@ -30,7 +30,7 @@ public class KorSubTypedItemBlock extends
       itemDamage = 0;
     }
 
-    return super.getUnlocalizedName() + "." + subTypes[itemDamage];
+    return super.getUnlocalizedName() + "_" + subTypes[itemDamage].getName();
   }
 
   @Override

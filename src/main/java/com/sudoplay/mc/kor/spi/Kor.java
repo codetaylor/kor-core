@@ -19,7 +19,7 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.Co
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.IParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.KorParameterStrategy;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
-import com.sudoplay.mc.kor.spi.event.KorRegistrationEvent;
+import com.sudoplay.mc.kor.spi.event.*;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
@@ -116,7 +116,7 @@ public abstract class Kor {
     { // Configuration
       this.loggerService.info("Kor Configuration Phase...");
 
-      this.eventService.publish(new KorRegistrationEvent.OnLoadConfigurationsEvent(
+      this.eventService.publish(new OnLoadConfigurationsEvent(
           this.textConfigService,
           this.configService
       ));
@@ -125,12 +125,12 @@ public abstract class Kor {
     { // Registration (init)
       this.loggerService.info("Kor Registration Phase...");
 
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterCreativeTabsEvent(this.registryService));
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterMaterialsEvent(this.registryService));
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterItemsEvent(this.registryService));
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterBlocksEvent(this.registryService));
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterRecipesEvent(this.registryService));
-      this.eventService.publish(new KorRegistrationEvent.OnRegisterWorldGenEvent(this.registryService));
+      this.eventService.publish(new OnRegisterCreativeTabsEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterMaterialsEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterItemsEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterBlocksEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterRecipesEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService, this.textConfigService, this.configService));
 
       this.executePreInitializationStrategies(this);
     }

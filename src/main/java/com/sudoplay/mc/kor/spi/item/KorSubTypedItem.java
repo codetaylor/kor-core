@@ -48,7 +48,7 @@ public abstract class KorSubTypedItem extends
     for (ISubType subType : this.subTypes) {
 
       if (stack.getItemDamage() == subType.getMeta()) {
-        return super.getUnlocalizedName(stack) + "." + subType.getName();
+        return super.getUnlocalizedName(stack) + "_" + subType.getName();
       }
     }
 

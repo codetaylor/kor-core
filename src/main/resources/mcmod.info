@@ -1,13 +1,13 @@
 [
 {
-  "modid": "sk3lls-kor-library",
-  "name": "Sk3lls Kor Library",
+  "modid": "ctkorlib",
+  "name": "CT Kor Library",
   "description": "Common code for Kor mods.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["sk3lls"],
+  "authorList": ["codetaylor"],
   "credits": "The Forge and FML guys, for making Forge and FML.",
   "logoFile": "",
   "screenshots": [],
