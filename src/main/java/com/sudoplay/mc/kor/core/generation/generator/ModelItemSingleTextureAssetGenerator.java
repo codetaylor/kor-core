@@ -29,10 +29,10 @@ public class ModelItemSingleTextureAssetGenerator extends
     String modId = annotation.modId();
 
     String content = "{\n" +
-        "  \"parent\": \"" + modId + ":" + moduleId + "/block/" + name + "\"\n" +
+        "  \"parent\": \"" + modId + ":block/" + name + "\"\n" +
         "}";
 
-    String filename = moduleId + "/" + name + ".json";
+    String filename = name + ".json";
     File file = new File(this.outputFilePath, filename);
 
     this.writeFile(content, file);

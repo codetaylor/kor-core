@@ -32,21 +32,22 @@ public class TextConfigService implements
 
   @Override
   public TextConfigData loadConfiguration(
-      String configurationPathname,
-      String configurationFilename,
+      File configurationFile,
       KorForgeConfigurationAdapter<TextConfigData>... configurationAdapters
   ) {
     TextConfigData textConfigData = new TextConfigData();
-    configurationPathname = new File(this.modConfigurationDirectory, configurationPathname).getPath();
+
+    String path = configurationFile.getPath();
+
+    configurationFile = new File(this.modConfigurationDirectory, path);
 
     this.configurationLoader.loadConfiguration(
-        configurationPathname,
-        configurationFilename,
+        configurationFile,
         textConfigData,
         configurationAdapters
     );
 
-    this.put(configurationFilename, textConfigData);
+    this.put(path.replace("\\", "/"), textConfigData);
 
     return textConfigData;
   }

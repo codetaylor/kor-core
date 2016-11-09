@@ -7,4 +7,6 @@ public interface IRegistryService {
   <R> R get(Class<R> registerableClass);
 
   IRegistryService register(Object registerableObject);
+
+  IRegistryService register(Object... registerableObjects);
 }

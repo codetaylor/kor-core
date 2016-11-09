@@ -2,12 +2,19 @@ package com.sudoplay.mc.kor.core.generation;
 
 import com.sudoplay.mc.kor.core.event.service.EventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
-import com.sudoplay.mc.kor.core.generation.annotation.*;
-import com.sudoplay.mc.kor.core.generation.generator.*;
+import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockAssets;
+import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockSubTypedAssets;
+import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateLangEntries;
+import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateModelItemSingleTexture;
+import com.sudoplay.mc.kor.core.generation.generator.BlockAssetGenerator;
+import com.sudoplay.mc.kor.core.generation.generator.BlockSubTypedAssetGenerator;
+import com.sudoplay.mc.kor.core.generation.generator.LangEntriesGenerator;
+import com.sudoplay.mc.kor.core.generation.generator.ModelItemSingleTextureAssetGenerator;
 import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 import com.sudoplay.mc.kor.spi.IKorModule;
-import com.sudoplay.mc.kor.spi.event.OnRegisterBlocksEvent;
+import com.sudoplay.mc.kor.spi.event.internal.OnRegisterBlocksEvent;
+import com.sudoplay.mc.kor.spi.event.internal.OnRegisterCreativeTabsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +52,9 @@ public class AssetGenerator {
       eventService.subscribe(module);
     }
 
-    eventService.publish(new OnRegisterBlocksEvent(new Generator(this.assetPath)));
+    Generator generator = new Generator(this.assetPath);
+    eventService.publish(new OnRegisterCreativeTabsEvent(generator));
+    eventService.publish(new OnRegisterBlocksEvent(generator));
     this.langEntriesGenerator.flush();
   }
 
@@ -63,13 +72,8 @@ public class AssetGenerator {
       );
 
       this.map.put(
-          KorGenerateBlockStatesSingleVariant.class,
-          new BlockStatesSingleVariantAssetGenerator(assetPath)
-      );
-
-      this.map.put(
-          KorGenerateModelBlockSingleTexture.class,
-          new ModelBlockSingleTextureAssetGenerator(assetPath)
+          KorGenerateBlockAssets.class,
+          new BlockAssetGenerator(assetPath)
       );
 
       this.map.put(
@@ -81,6 +85,15 @@ public class AssetGenerator {
           KorGenerateLangEntries.class,
           AssetGenerator.this.langEntriesGenerator
       );
+    }
+
+    @Override
+    public IRegistryService register(Object... registerableObjects) {
+
+      for (Object registerableObject : registerableObjects) {
+        this.register(registerableObject);
+      }
+      return this;
     }
 
     @Override

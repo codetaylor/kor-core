@@ -13,21 +13,14 @@ public class TextConfigLoader implements
 
   @Override
   public TextConfigData loadConfiguration(
-      String configurationPathname,
-      String configurationFilename,
+      File configurationFile,
       TextConfigData textConfigData,
       KorForgeConfigurationAdapter... modConfigurationAdapters
   ) {
     Configuration configuration;
-    File configurationPath;
-    String path;
-    File configurationFile;
 
-    configurationPath = new File(configurationPathname);
     //noinspection ResultOfMethodCallIgnored
-    configurationPath.mkdirs();
-    path = configurationPath.getPath();
-    configurationFile = new File(path, configurationFilename);
+    configurationFile.getParentFile().mkdirs();
 
     configuration = new Configuration(configurationFile);
 

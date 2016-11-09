@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.item;
 
-import com.sudoplay.mc.kor.spi.block.KorSubTypedBlock;
-import com.sudoplay.mc.kor.spi.item.ISubType;
+import com.sudoplay.mc.kor.core.IntMap;
+import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -23,14 +23,13 @@ public class KorSubTypedItemBlock extends
   @Nonnull
   @Override
   public String getUnlocalizedName(ItemStack stack) {
-    ISubType[] subTypes = ((KorSubTypedBlock) this.block).getSubTypes();
+    KorSubTypedEnumBlock block = (KorSubTypedEnumBlock) this.block;
+
+    //noinspection unchecked
+    IntMap<ISubType> subTypeIntMap = block.getSubTypeIntMap();
     int itemDamage = stack.getItemDamage();
 
-    if (itemDamage < 0 || itemDamage >= subTypes.length) {
-      itemDamage = 0;
-    }
-
-    return super.getUnlocalizedName() + "_" + subTypes[itemDamage].getName();
+    return super.getUnlocalizedName() + "_" + subTypeIntMap.get(itemDamage).getName();
   }
 
   @Override

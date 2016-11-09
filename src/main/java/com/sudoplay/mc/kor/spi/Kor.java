@@ -10,6 +10,7 @@ import com.sudoplay.mc.kor.core.event.service.IEventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
 import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.core.registry.FilterBuckets;
+import com.sudoplay.mc.kor.core.registry.PreRegistrationVetoHandler;
 import com.sudoplay.mc.kor.core.registry.service.RegistryService;
 import com.sudoplay.mc.kor.core.registry.service.injection.RegistryObjectInjector;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.constructor.ArgConstructorStrategy;
@@ -19,7 +20,8 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.Co
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.IParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.KorParameterStrategy;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
-import com.sudoplay.mc.kor.spi.event.*;
+import com.sudoplay.mc.kor.spi.event.KorForgeEventHandler;
+import com.sudoplay.mc.kor.spi.event.internal.*;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
@@ -117,6 +119,7 @@ public abstract class Kor {
       this.loggerService.info("Kor Configuration Phase...");
 
       this.eventService.publish(new OnLoadConfigurationsEvent(
+          this.registryService,
           this.textConfigService,
           this.configService
       ));
@@ -125,12 +128,12 @@ public abstract class Kor {
     { // Registration (init)
       this.loggerService.info("Kor Registration Phase...");
 
-      this.eventService.publish(new OnRegisterCreativeTabsEvent(this.registryService, this.textConfigService, this.configService));
-      this.eventService.publish(new OnRegisterMaterialsEvent(this.registryService, this.textConfigService, this.configService));
-      this.eventService.publish(new OnRegisterItemsEvent(this.registryService, this.textConfigService, this.configService));
-      this.eventService.publish(new OnRegisterBlocksEvent(this.registryService, this.textConfigService, this.configService));
-      this.eventService.publish(new OnRegisterRecipesEvent(this.registryService, this.textConfigService, this.configService));
-      this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService, this.textConfigService, this.configService));
+      this.eventService.publish(new OnRegisterCreativeTabsEvent(this.registryService));
+      this.eventService.publish(new OnRegisterMaterialsEvent(this.registryService));
+      this.eventService.publish(new OnRegisterItemsEvent(this.registryService));
+      this.eventService.publish(new OnRegisterBlocksEvent(this.registryService));
+      this.eventService.publish(new OnRegisterRecipesEvent(this.registryService));
+      this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService));
 
       this.executePreInitializationStrategies(this);
     }
@@ -244,17 +247,25 @@ public abstract class Kor {
               KorArmorMaterial.class,
               KorToolMaterial.class,
               KorRecipeCraftingShaped.class,
-              KorWorldGen.class
+              KorWorldGen.class,
+              KorForgeEventHandler.class
           },
-          registryObjectInjector
+          registryObjectInjector,
+          this.loggerService
       );
 
-      this.registryService.addCallback(registeredObject -> {
+      this.registryService.addPreRegistrationHook(new PreRegistrationVetoHandler(
+          this.textConfigService,
+          this.loggerService
+      ));
+
+      this.registryService.addPostRegistrationHook(registeredObject -> {
+
         this.registrationStrategyProviderBuckets.add(registeredObject);
+        Class<?> registeredObjectClass = registeredObject.getClass();
+        ForgeEventListener annotation = registeredObjectClass.getAnnotation(ForgeEventListener.class);
 
-        ForgeEventListener annotation = registeredObject.getClass().getAnnotation(ForgeEventListener.class);
-
-        if (annotation != null) {
+        if (annotation != null || KorForgeEventHandler.class.isAssignableFrom(registeredObjectClass)) {
           MinecraftForge.EVENT_BUS.register(registeredObject);
         }
 

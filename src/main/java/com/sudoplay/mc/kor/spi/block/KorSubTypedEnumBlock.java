@@ -1,11 +1,11 @@
 package com.sudoplay.mc.kor.spi.block;
 
+import com.sudoplay.mc.kor.core.IntMap;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientPreInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorPreInitStrategyProvider;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ import java.util.List;
  * <p>
  * Created by sk3lls on 11/6/2016.
  */
-public class KorSubTypedBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
+public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
     Block implements
     KorPreInitStrategyProvider.SubTypedBlock,
     KorClientPreInitStrategyProvider.SubTypedBlock,
@@ -38,16 +39,36 @@ public class KorSubTypedBlock<E extends Enum<E> & ISubType & IStringSerializable
   private static PropertyEnum<?> TEMP_PROPERTY;
 
   private final PropertyEnum<E> property;
-  private final E[] subTypes;
+  private final List<ISubType> subTypeList;
+  private final IntMap<E> subTypeIntMap;
 
-  public KorSubTypedBlock(String modId, String name, Material material, PropertyEnum<E> property, Class<E> enumClass) {
-    this(modId, name, material, material.getMaterialMapColor(), property, enumClass);
-  }
-
-  public KorSubTypedBlock(String modId, String name, Material material, MapColor blockMapColor, PropertyEnum<E> property, Class<E> enumClass) {
-    super(superHook(material, property), blockMapColor);
+  public KorSubTypedEnumBlock(
+      String modId,
+      String name,
+      Material material,
+      PropertyEnum<E> property,
+      Class<E> enumClass,
+      boolean[] mask
+  ) {
+    super(superHook(material, property), material.getMaterialMapColor());
     this.property = property;
-    this.subTypes = enumClass.getEnumConstants();
+
+    E[] enumConstants = enumClass.getEnumConstants();
+
+    if (enumConstants.length != mask.length) {
+      throw new IllegalArgumentException(String.format("Mask length doesn't equal enum length for: %s", name));
+    }
+
+    this.subTypeList = new ArrayList<>();
+    this.subTypeIntMap = new IntMap<>();
+
+    for (int i = 0; i < enumConstants.length; i++) {
+      if (mask[i]) {
+        this.subTypeList.add(enumConstants[i]);
+        this.subTypeIntMap.put(enumConstants[i].getMeta(), enumConstants[i]);
+      }
+    }
+
     this.setUnlocalizedName(name);
     this.setRegistryName(modId, name);
   }
@@ -61,8 +82,9 @@ public class KorSubTypedBlock<E extends Enum<E> & ISubType & IStringSerializable
   @Override
   public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list) {
 
-    for (ISubType type : this.subTypes) {
-      list.add(new ItemStack(this, 1, type.getMeta()));
+    for (ISubType subType : this.subTypeList) {
+
+      list.add(new ItemStack(this, 1, subType.getMeta()));
     }
   }
 
@@ -108,15 +130,15 @@ public class KorSubTypedBlock<E extends Enum<E> & ISubType & IStringSerializable
     return new ItemStack(itemFromBlock, 1, getMetaFromState(world.getBlockState(pos)));
   }
 
-  public ISubType[] getSubTypes() {
-    return this.subTypes;
+  public List<ISubType> getSubTypes() {
+    return this.subTypeList;
+  }
+
+  public IntMap<E> getSubTypeIntMap() {
+    return this.subTypeIntMap;
   }
 
   private E fromMeta(int meta) {
-
-    if (meta < 0 || meta >= this.subTypes.length) {
-      meta = 0;
-    }
-    return this.subTypes[meta];
+    return this.subTypeIntMap.get(meta);
   }
 }

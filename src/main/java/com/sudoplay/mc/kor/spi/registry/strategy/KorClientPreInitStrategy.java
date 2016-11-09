@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedBlock;
+import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import net.minecraft.block.Block;
@@ -9,6 +9,8 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+
+import java.util.List;
 
 /**
  * Created by sk3lls on 10/30/2016.
@@ -71,7 +73,7 @@ public interface KorClientPreInitStrategy {
 
     public SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedBlock)) {
+      if (!(block instanceof KorSubTypedEnumBlock)) {
         throw new IllegalArgumentException("EnumBlock strategy requires block to implement KorSubTypedBlock");
       }
       this.block = block;
@@ -86,7 +88,11 @@ public interface KorClientPreInitStrategy {
 
       modId = mod.getModId();
 
-      for (ISubType subType : ((KorSubTypedBlock) this.block).getSubTypes()) {
+      KorSubTypedEnumBlock block = (KorSubTypedEnumBlock) this.block;
+      //noinspection unchecked
+      List<ISubType> subTypes = block.getSubTypes();
+
+      for (ISubType subType : subTypes) {
         meta = subType.getMeta();
         blockName = this.block.getRegistryName().getResourcePath();
         subBlockName = blockName + "_" + subType.getName();

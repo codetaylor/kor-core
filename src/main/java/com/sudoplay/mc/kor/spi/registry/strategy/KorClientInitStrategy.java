@@ -1,13 +1,15 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedBlock;
+import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 /**
  * Created by sk3lls on 10/30/2016.
@@ -69,34 +71,35 @@ public interface KorClientInitStrategy {
       KorClientInitStrategy {
 
     private Block block;
-    private ISubType[] subTypes;
+    private List<ISubType> subTypes;
 
     SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedBlock)) {
+      if (!(block instanceof KorSubTypedEnumBlock)) {
         throw new RuntimeException("SubTypedBlock strategy requires item to extend KorSubTypedItem");
       }
 
       this.block = block;
-      this.subTypes = ((KorSubTypedBlock) block).getSubTypes();
+
+      //noinspection unchecked
+      this.subTypes = ((KorSubTypedEnumBlock) block).getSubTypes();
     }
 
     @Override
     public void onClientInit(Kor mod) {
       String name;
       ResourceLocation[] resourceLocations;
-      int arrayLength;
-      ISubType subType;
       String blockName;
 
-      arrayLength = this.subTypes.length;
-      resourceLocations = new ResourceLocation[arrayLength];
+      resourceLocations = new ResourceLocation[this.subTypes.size()];
       blockName = this.block.getRegistryName().getResourcePath();
 
-      for (int i = 0; i < arrayLength; ++i) {
-        subType = this.subTypes[i];
+      int index = 0;
+
+      for (ISubType subType : this.subTypes) {
         name = blockName + "_" + subType.getName();
-        resourceLocations[i] = new ResourceLocation(mod.getModId(), name);
+        resourceLocations[index] = new ResourceLocation(mod.getModId(), name);
+        index += 1;
       }
 
       Item item = Item.getItemFromBlock(this.block);

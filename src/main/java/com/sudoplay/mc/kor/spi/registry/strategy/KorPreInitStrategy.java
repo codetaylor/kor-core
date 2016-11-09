@@ -2,7 +2,7 @@ package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItemBlock;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedBlock;
+import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -53,7 +53,7 @@ public interface KorPreInitStrategy {
 
     SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedBlock)) {
+      if (!(block instanceof KorSubTypedEnumBlock)) {
         throw new IllegalArgumentException("EnumBlock strategy requires block to extend KorSubTypedBlock");
       }
       this.block = block;

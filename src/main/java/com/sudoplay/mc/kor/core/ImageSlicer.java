@@ -13,20 +13,6 @@ import java.io.InputStream;
  */
 public class ImageSlicer {
 
-  public String[] createFilenames(String[] cols, String[] rows) {
-
-    String[] filenames = new String[cols.length * rows.length];
-
-    for (int x = 0; x < cols.length; x++) {
-
-      for (int y = 0; y < rows.length; y++) {
-        filenames[x + cols.length * y] = rows[y] + "_" + cols[x];
-      }
-    }
-
-    return filenames;
-  }
-
   public void sliceImage(
       InputStream inputStream,
       String[] filenames,
