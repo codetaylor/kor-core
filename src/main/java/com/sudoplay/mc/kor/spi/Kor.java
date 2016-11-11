@@ -1,8 +1,10 @@
 package com.sudoplay.mc.kor.spi;
 
+import com.google.gson.GsonBuilder;
 import com.sudoplay.mc.kor.core.config.json.ConfigService;
 import com.sudoplay.mc.kor.core.config.json.IConfigService;
 import com.sudoplay.mc.kor.core.config.text.ITextConfigService;
+import com.sudoplay.mc.kor.core.config.text.TextConfigData;
 import com.sudoplay.mc.kor.core.config.text.TextConfigLoader;
 import com.sudoplay.mc.kor.core.config.text.TextConfigService;
 import com.sudoplay.mc.kor.core.event.service.EventService;
@@ -19,6 +21,7 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.constructor.
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.ConfigParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.IParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.KorParameterStrategy;
+import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.TextConfigParameterStrategy;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 import com.sudoplay.mc.kor.spi.event.KorForgeEventHandler;
 import com.sudoplay.mc.kor.spi.event.internal.*;
@@ -217,7 +220,15 @@ public abstract class Kor {
 
     { // Init Configuration Services
       this.textConfigService = new TextConfigService(new TextConfigLoader(), modConfigurationDirectory);
-      this.configService = new ConfigService(loggerService, modConfigurationDirectory, this.getJsonConfigsVersion());
+      this.configService = new ConfigService(
+          this.loggerService,
+          modConfigurationDirectory,
+          new GsonBuilder()
+              .setPrettyPrinting()
+              .setVersion(this.getJsonConfigsVersion())
+              .enableComplexMapKeySerialization()
+              .create()
+      );
     }
 
     { // Init strategy provider buckets
@@ -234,7 +245,8 @@ public abstract class Kor {
       RegistryObjectInjector registryObjectInjector = new RegistryObjectInjector(new IConstructorStrategy[]{
           new NoArgConstructorStrategy(),
           new ArgConstructorStrategy(new LinkedHashMap<Class<?>, IParameterStrategy>() {{
-            put(KorConfigObject.class, new ConfigParameterStrategy(Kor.this.configService, modConfigurationDirectory));
+            put(TextConfigData.class, new TextConfigParameterStrategy(Kor.this.textConfigService));
+            put(KorConfigObject.class, new ConfigParameterStrategy(Kor.this.configService));
             put(Kor.class, new KorParameterStrategy(Kor.this));
           }})
       });
@@ -256,7 +268,8 @@ public abstract class Kor {
 
       this.registryService.addPreRegistrationHook(new PreRegistrationVetoHandler(
           this.textConfigService,
-          this.loggerService
+          this.loggerService,
+          registryObjectInjector
       ));
 
       this.registryService.addPostRegistrationHook(registeredObject -> {

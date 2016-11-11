@@ -3,6 +3,7 @@ package com.sudoplay.mc.kor.core.generation.generator;
 import com.sudoplay.mc.kor.core.generation.AbstractAssetGenerator;
 import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateLangEntries;
 import com.sudoplay.mc.kor.core.generation.annotation.KorLangEntry;
+import com.sudoplay.mc.kor.core.log.LoggerService;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,9 +17,14 @@ public class LangEntriesGenerator extends
 
   private Map<File, StringBuilder> builderMap;
   private String langPath;
+  private LoggerService loggerService;
 
-  public LangEntriesGenerator(String langPath) {
+  public LangEntriesGenerator(
+      String langPath,
+      LoggerService loggerService
+  ) {
     this.langPath = langPath;
+    this.loggerService = loggerService;
     this.builderMap = new HashMap<>();
   }
 
@@ -40,6 +46,7 @@ public class LangEntriesGenerator extends
       }
 
       stringBuilder.append(key).append("=").append(value).append("\n");
+      this.loggerService.info(String.format("Generated: lang/%s << %s=%s", file, key, value));
     }
   }
 

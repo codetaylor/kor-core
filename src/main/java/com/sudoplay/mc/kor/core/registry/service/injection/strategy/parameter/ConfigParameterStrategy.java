@@ -2,9 +2,8 @@ package com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter;
 
 import com.sudoplay.mc.kor.core.config.json.IConfigService;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
-import com.sudoplay.mc.kor.spi.registry.injection.KorConfig;
+import com.sudoplay.mc.kor.spi.registry.injection.KorJsonConfig;
 
-import java.io.File;
 import java.lang.reflect.Parameter;
 
 /**
@@ -14,19 +13,16 @@ public class ConfigParameterStrategy implements
     IParameterStrategy<KorConfigObject> {
 
   private IConfigService configService;
-  private File modConfigurationDirectory;
 
   public ConfigParameterStrategy(
-      IConfigService configService,
-      File modConfigurationDirectory
+      IConfigService configService
   ) {
     this.configService = configService;
-    this.modConfigurationDirectory = modConfigurationDirectory;
   }
 
   @Override
   public boolean isValidParameter(Parameter parameter) {
-    KorConfig annotation = parameter.getAnnotation(KorConfig.class);
+    KorJsonConfig annotation = parameter.getAnnotation(KorJsonConfig.class);
     boolean hasCorrectAnnotation = annotation != null;
     boolean isCorrectType = KorConfigObject.class.isAssignableFrom(parameter.getType());
     return hasCorrectAnnotation && isCorrectType;
@@ -38,7 +34,7 @@ public class ConfigParameterStrategy implements
     //noinspection unchecked
     Class<? extends KorConfigObject> type = (Class<? extends KorConfigObject>) parameter.getType();
 
-    KorConfig annotation = parameter.getAnnotation(KorConfig.class);
+    KorJsonConfig annotation = parameter.getAnnotation(KorJsonConfig.class);
     String file = annotation.file();
     String path = annotation.path();
 

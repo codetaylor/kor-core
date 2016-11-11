@@ -2,14 +2,8 @@ package com.sudoplay.mc.kor.core.generation;
 
 import com.sudoplay.mc.kor.core.event.service.EventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
-import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockAssets;
-import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockSubTypedAssets;
-import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateLangEntries;
-import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateModelItemSingleTexture;
-import com.sudoplay.mc.kor.core.generation.generator.BlockAssetGenerator;
-import com.sudoplay.mc.kor.core.generation.generator.BlockSubTypedAssetGenerator;
-import com.sudoplay.mc.kor.core.generation.generator.LangEntriesGenerator;
-import com.sudoplay.mc.kor.core.generation.generator.ModelItemSingleTextureAssetGenerator;
+import com.sudoplay.mc.kor.core.generation.annotation.*;
+import com.sudoplay.mc.kor.core.generation.generator.*;
 import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 import com.sudoplay.mc.kor.spi.IKorModule;
@@ -29,22 +23,27 @@ public class AssetGenerator {
 
   private static final Logger LOG = LogManager.getLogger(AssetGenerator.class.getSimpleName());
 
-  private String assetPath;
+  private String assetInputPath;
+  private String assetOutputPath;
 
   private LangEntriesGenerator langEntriesGenerator;
+  private LoggerService loggerService;
 
-  public AssetGenerator(String assetPath) {
-    this.assetPath = assetPath;
-    this.langEntriesGenerator = new LangEntriesGenerator(assetPath);
+  public AssetGenerator(
+      String assetInputPath,
+      String assetOutputPath
+  ) {
+    this.assetInputPath = assetInputPath;
+    this.assetOutputPath = assetOutputPath;
+    this.loggerService = new LoggerService(LOG);
+    this.langEntriesGenerator = new LangEntriesGenerator(assetOutputPath, this.loggerService);
   }
 
   public void generate(IKorModule... modules) {
 
-    LoggerService loggerService;
     LogErrorEventExceptionHandler eventExceptionHandler;
     EventService eventService;
 
-    loggerService = new LoggerService(LOG);
     eventExceptionHandler = new LogErrorEventExceptionHandler(loggerService);
     eventService = new EventService(eventExceptionHandler);
 
@@ -52,7 +51,7 @@ public class AssetGenerator {
       eventService.subscribe(module);
     }
 
-    Generator generator = new Generator(this.assetPath);
+    Generator generator = new Generator(this.assetInputPath, this.assetOutputPath, loggerService);
     eventService.publish(new OnRegisterCreativeTabsEvent(generator));
     eventService.publish(new OnRegisterBlocksEvent(generator));
     this.langEntriesGenerator.flush();
@@ -63,27 +62,36 @@ public class AssetGenerator {
 
     private Map<Class<? extends Annotation>, AbstractAssetGenerator> map;
 
-    Generator(String assetPath) {
+    Generator(
+        String assetInputPath,
+        String assetOutputPath,
+        LoggerService loggerService
+    ) {
       this.map = new LinkedHashMap<>();
 
       this.map.put(
           KorGenerateBlockSubTypedAssets.class,
-          new BlockSubTypedAssetGenerator(assetPath)
+          new BlockSubTypedAssetGenerator(assetOutputPath, loggerService)
       );
 
       this.map.put(
           KorGenerateBlockAssets.class,
-          new BlockAssetGenerator(assetPath)
+          new BlockAssetGenerator(assetOutputPath, loggerService)
       );
 
       this.map.put(
           KorGenerateModelItemSingleTexture.class,
-          new ModelItemSingleTextureAssetGenerator(assetPath)
+          new ModelItemSingleTextureAssetGenerator(assetOutputPath, loggerService)
       );
 
       this.map.put(
           KorGenerateLangEntries.class,
           AssetGenerator.this.langEntriesGenerator
+      );
+
+      this.map.put(
+          KorGenerateImageSlices.class,
+          new ImageSliceGenerator(assetInputPath, assetOutputPath, new ImageSlicer(), loggerService)
       );
     }
 

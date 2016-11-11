@@ -27,7 +27,7 @@ public class TextConfigService implements
 
   @Override
   public TextConfigData get(String name) {
-    return this.configurationMap.get(name);
+    return this.configurationMap.get(name.replace("\\", "/"));
   }
 
   @Override

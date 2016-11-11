@@ -4,11 +4,12 @@ import com.sudoplay.mc.kor.core.config.text.ITextConfigService;
 import com.sudoplay.mc.kor.core.config.text.TextConfigData;
 import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.core.registry.service.IRegistryServicePreRegistrationHook;
+import com.sudoplay.mc.kor.core.registry.service.injection.RegistryObjectInjector;
 import com.sudoplay.mc.kor.spi.event.external.KorExternalEvent;
-import com.sudoplay.mc.kor.spi.registry.KorRegistrationClassDependency;
-import com.sudoplay.mc.kor.spi.registry.KorRegistrationTextConfigDependency;
+import com.sudoplay.mc.kor.spi.registry.*;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
@@ -20,10 +21,16 @@ public class PreRegistrationVetoHandler implements
 
   private ITextConfigService textConfigService;
   private LoggerService loggerService;
+  private RegistryObjectInjector registryObjectInjector;
 
-  public PreRegistrationVetoHandler(ITextConfigService textConfigService, LoggerService loggerService) {
+  public PreRegistrationVetoHandler(
+      ITextConfigService textConfigService,
+      LoggerService loggerService,
+      RegistryObjectInjector registryObjectInjector
+  ) {
     this.textConfigService = textConfigService;
     this.loggerService = loggerService;
+    this.registryObjectInjector = registryObjectInjector;
   }
 
   @Override
@@ -61,41 +68,100 @@ public class PreRegistrationVetoHandler implements
     trail.add(potentialClass);
 
     { // check if the class has a text config dependency
-      KorRegistrationTextConfigDependency annotation;
-      annotation = potentialClass.getAnnotation(KorRegistrationTextConfigDependency.class);
+      KorRegistrationTextConfigDependency textConfigDependencyAnnotation;
 
-      if (annotation != null) {
-        // check boolean value
-        String filename = annotation.filename();
-        String category = annotation.category();
-        String key = annotation.key();
+      textConfigDependencyAnnotation = potentialClass.getAnnotation(KorRegistrationTextConfigDependency.class);
 
-        TextConfigData textConfigData = this.textConfigService.get(filename);
+      if (textConfigDependencyAnnotation != null) {
 
-        if (textConfigData == null) {
-          throw new IllegalStateException(String.format(
-              "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
-                  "but the config file referenced in the annotation isn't loaded. Make sure " +
-                  "the config file is loaded in the module's onLoadConfigurationsEvent.",
-              potentialClass
-          ));
+        KorTextConfigDependency[] annotations = textConfigDependencyAnnotation.dependsOn();
+
+        for (KorTextConfigDependency annotation : annotations) {
+
+          if (annotation != null) {
+            // check boolean value
+            String filename = annotation.filename();
+            String category = annotation.category();
+            String key = annotation.key();
+
+            TextConfigData textConfigData = this.textConfigService.get(filename);
+
+            if (textConfigData == null) {
+              throw new IllegalStateException(String.format(
+                  "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
+                      "but the config file referenced in the annotation isn't loaded. Make sure " +
+                      "the config file is loaded in the module's onLoadConfigurationsEvent.",
+                  potentialClass
+              ));
+            }
+
+            Boolean configValue = textConfigData.getCategory(category).getBoolean(key);
+
+            if (configValue == null) {
+              throw new IllegalStateException(String.format(
+                  "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
+                      "but the config file referenced in the annotation doesn't have the " +
+                      "specified key %s in category %s.",
+                  potentialClass,
+                  key,
+                  category
+              ));
+            }
+
+            if (!configValue) {
+              return false;
+            }
+          }
         }
+      }
+    }
 
-        Boolean configValue = textConfigData.getCategory(category).getBoolean(key);
+    { // check if the class has any custom dependency requests
 
-        if (configValue == null) {
-          throw new IllegalStateException(String.format(
-              "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
-                  "but the config file referenced in the annotation doesn't have the " +
-                  "specified key %s in category %s.",
-              potentialClass,
-              key,
-              category
-          ));
-        }
+      KorRegistrationCustomDependency customDependencyAnnotation;
+      KorRegistrationCustomDependencyRequestHandler customDependencyRequestHandlerAnnotation;
+      KorCustomDependency[] customDependencies;
+      Class<?> target;
+      String payload;
+      Class<? extends KorCustomDependencyRequestHandler> handlerClass;
+      KorCustomDependencyRequestHandler handler;
+      boolean result;
 
-        if (!configValue) {
-          return false;
+      customDependencyAnnotation = potentialClass.getAnnotation(KorRegistrationCustomDependency.class);
+
+      if (customDependencyAnnotation != null) {
+        customDependencies = customDependencyAnnotation.dependsOn();
+
+        for (KorCustomDependency customDependency : customDependencies) {
+          target = customDependency.target();
+          payload = customDependency.payload();
+
+          customDependencyRequestHandlerAnnotation = target.getAnnotation(KorRegistrationCustomDependencyRequestHandler.class);
+
+          if (customDependencyRequestHandlerAnnotation == null) {
+            throw new IllegalStateException(String.format(
+                "Class %s has a custom dependency on class %s, but class %s doesn't provide a " +
+                    "@KorRegistrationCustomDependencyRequestHandler annotation",
+                potentialClass,
+                target,
+                target.getSimpleName()
+            ));
+          }
+
+          handlerClass = customDependencyRequestHandlerAnnotation.handler();
+
+          try {
+            handler = (KorCustomDependencyRequestHandler) this.registryObjectInjector.createInjectedObject(handlerClass);
+
+          } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new RuntimeException("Failed to instantiate custom dependency request handler: " + handlerClass, e);
+          }
+
+          result = handler.onCustomDependencyRequest(payload);
+
+          if (!result) {
+            return false;
+          }
         }
       }
     }

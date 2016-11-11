@@ -11,9 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface KorRegistrationTextConfigDependency {
-  String filename();
 
-  String category();
-
-  String key();
+  KorTextConfigDependency[] dependsOn();
 }

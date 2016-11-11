@@ -6,13 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by sk3lls on 11/7/2016.
+ * Created by sk3lls on 11/11/2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface KorGenerateModelItemSingleTexture {
+public @interface KorGenerateImageSlices {
 
-  String name();
-
-  String modId();
+  KorImageSliceEntry[] slices();
 }

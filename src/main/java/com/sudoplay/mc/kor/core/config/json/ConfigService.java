@@ -1,7 +1,6 @@
 package com.sudoplay.mc.kor.core.config.json;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 
@@ -22,17 +21,13 @@ public class ConfigService implements IConfigService {
   public ConfigService(
       LoggerService loggerService,
       File modConfigurationDirectory,
-      double configsVersion
+      Gson gson
   ) {
     this.loggerService = loggerService;
     this.modConfigurationDirectory = modConfigurationDirectory;
+    this.gson = gson;
 
     this.configInstantiator = new ConfigInstantiator();
-
-    this.gson = new GsonBuilder()
-        .setPrettyPrinting()
-        .setVersion(configsVersion)
-        .create();
   }
 
   @Override

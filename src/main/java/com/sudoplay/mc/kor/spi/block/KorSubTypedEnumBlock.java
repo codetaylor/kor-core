@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Inspired by:
  * https://github.com/SlimeKnights/Mantle/blob/master/src/main/java/slimeknights/mantle/block/EnumBlock.java
  * <p>
  * Created by sk3lls on 11/6/2016.
@@ -39,8 +40,26 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
   private static PropertyEnum<?> TEMP_PROPERTY;
 
   private final PropertyEnum<E> property;
+
+  /**
+   * This list contains only the enum values allowed by the mask
+   */
   private final List<ISubType> subTypeList;
+
+  /**
+   * This map contains all enum values
+   */
   private final IntMap<E> subTypeIntMap;
+
+  public KorSubTypedEnumBlock(
+      String modId,
+      String name,
+      Material material,
+      PropertyEnum<E> property,
+      Class<E> enumClass
+  ) {
+    this(modId, name, material, property, enumClass, null);
+  }
 
   public KorSubTypedEnumBlock(
       String modId,
@@ -50,12 +69,12 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
       Class<E> enumClass,
       boolean[] mask
   ) {
-    super(superHook(material, property), material.getMaterialMapColor());
+    super(KorSubTypedEnumBlock.hook(material, property), material.getMaterialMapColor());
     this.property = property;
 
     E[] enumConstants = enumClass.getEnumConstants();
 
-    if (enumConstants.length != mask.length) {
+    if (mask != null && enumConstants.length != mask.length) {
       throw new IllegalArgumentException(String.format("Mask length doesn't equal enum length for: %s", name));
     }
 
@@ -63,9 +82,10 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
     this.subTypeIntMap = new IntMap<>();
 
     for (int i = 0; i < enumConstants.length; i++) {
-      if (mask[i]) {
+      this.subTypeIntMap.put(enumConstants[i].getMeta(), enumConstants[i]);
+
+      if (mask == null || mask[i]) {
         this.subTypeList.add(enumConstants[i]);
-        this.subTypeIntMap.put(enumConstants[i].getMeta(), enumConstants[i]);
       }
     }
 
@@ -73,7 +93,7 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
     this.setRegistryName(modId, name);
   }
 
-  private static Material superHook(Material material, PropertyEnum<?> property) {
+  private static Material hook(Material material, PropertyEnum<?> property) {
     TEMP_PROPERTY = property;
     return material;
   }
@@ -130,10 +150,16 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
     return new ItemStack(itemFromBlock, 1, getMetaFromState(world.getBlockState(pos)));
   }
 
+  /**
+   * @return only valid subtypes
+   */
   public List<ISubType> getSubTypes() {
     return this.subTypeList;
   }
 
+  /**
+   * @return IntMap of all possible ISubType mapped by meta
+   */
   public IntMap<E> getSubTypeIntMap() {
     return this.subTypeIntMap;
   }

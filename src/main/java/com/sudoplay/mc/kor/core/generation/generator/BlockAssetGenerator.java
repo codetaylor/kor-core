@@ -2,8 +2,7 @@ package com.sudoplay.mc.kor.core.generation.generator;
 
 import com.sudoplay.mc.kor.core.generation.AbstractAssetGenerator;
 import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockAssets;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.sudoplay.mc.kor.core.log.LoggerService;
 
 import java.io.File;
 
@@ -13,14 +12,15 @@ import java.io.File;
 public class BlockAssetGenerator extends
     AbstractAssetGenerator<KorGenerateBlockAssets> {
 
-  private static final Logger LOG = LogManager.getLogger(BlockAssetGenerator.class.getSimpleName());
-
   private String assetsPath;
+  private LoggerService loggerService;
 
   public BlockAssetGenerator(
-      String assetsPath
+      String assetsPath,
+      LoggerService loggerService
   ) {
     this.assetsPath = assetsPath;
+    this.loggerService = loggerService;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class BlockAssetGenerator extends
 
     this.writeFile(content, file);
 
-    LOG.info("Generated: " + filename);
+    this.loggerService.info("Generated: " + filename);
   }
 
   private void writeBlockModelFiles(KorGenerateBlockAssets annotation) {
@@ -64,7 +64,7 @@ public class BlockAssetGenerator extends
 
     this.writeFile(content, file);
 
-    LOG.info("Generated: " + filename);
+    this.loggerService.info("Generated: " + filename);
   }
 
   private void writeBlockStatesFile(KorGenerateBlockAssets annotation) {
@@ -82,7 +82,7 @@ public class BlockAssetGenerator extends
 
     this.writeFile(content, file);
 
-    LOG.info("Generated: " + filename);
+    this.loggerService.info("Generated: " + filename);
   }
 
 }

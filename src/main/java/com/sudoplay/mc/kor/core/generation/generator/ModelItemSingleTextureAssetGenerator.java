@@ -2,8 +2,7 @@ package com.sudoplay.mc.kor.core.generation.generator;
 
 import com.sudoplay.mc.kor.core.generation.AbstractAssetGenerator;
 import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateModelItemSingleTexture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.sudoplay.mc.kor.core.log.LoggerService;
 
 import java.io.File;
 
@@ -13,18 +12,19 @@ import java.io.File;
 public class ModelItemSingleTextureAssetGenerator extends
     AbstractAssetGenerator<KorGenerateModelItemSingleTexture> {
 
-  private static final Logger LOG = LogManager.getLogger(ModelItemSingleTextureAssetGenerator.class.getSimpleName());
-
   private String outputFilePath;
+  private LoggerService loggerService;
 
-  public ModelItemSingleTextureAssetGenerator(String outputFilePath) {
+  public ModelItemSingleTextureAssetGenerator(
+      String outputFilePath,
+      LoggerService loggerService
+  ) {
     this.outputFilePath = outputFilePath;
+    this.loggerService = loggerService;
   }
 
   @Override
   public void generate(KorGenerateModelItemSingleTexture annotation) {
-
-    String moduleId = annotation.moduleId();
     String name = annotation.name();
     String modId = annotation.modId();
 
@@ -37,6 +37,6 @@ public class ModelItemSingleTextureAssetGenerator extends
 
     this.writeFile(content, file);
 
-    LOG.info("Generated Model: " + filename);
+    this.loggerService.info("Generated Model: " + filename);
   }
 }

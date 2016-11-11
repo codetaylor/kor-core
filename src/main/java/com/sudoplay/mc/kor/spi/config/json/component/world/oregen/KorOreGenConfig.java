@@ -15,7 +15,10 @@ public abstract class KorOreGenConfig extends
   private int modGenerationWeight = 0;
   private List<DimensionProfile> dimensionProfileList = new ArrayList<>();
 
-  public KorOreGenConfig(int modGenerationWeight, DimensionProfile... dimensionProfiles) {
+  public KorOreGenConfig(
+      int modGenerationWeight,
+      DimensionProfile... dimensionProfiles
+  ) {
     this.modGenerationWeight = modGenerationWeight;
 
     Collections.addAll(this.dimensionProfileList, dimensionProfiles);

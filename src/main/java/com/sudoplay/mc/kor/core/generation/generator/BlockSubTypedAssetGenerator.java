@@ -2,8 +2,7 @@ package com.sudoplay.mc.kor.core.generation.generator;
 
 import com.sudoplay.mc.kor.core.generation.AbstractAssetGenerator;
 import com.sudoplay.mc.kor.core.generation.annotation.KorGenerateBlockSubTypedAssets;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.sudoplay.mc.kor.core.log.LoggerService;
 
 import java.io.File;
 
@@ -13,14 +12,15 @@ import java.io.File;
 public class BlockSubTypedAssetGenerator extends
     AbstractAssetGenerator<KorGenerateBlockSubTypedAssets> {
 
-  private static final Logger LOG = LogManager.getLogger(BlockSubTypedAssetGenerator.class.getSimpleName());
-
   private String assetsPath;
+  private LoggerService loggerService;
 
   public BlockSubTypedAssetGenerator(
-      String assetsPath
+      String assetsPath,
+      LoggerService loggerService
   ) {
     this.assetsPath = assetsPath;
+    this.loggerService = loggerService;
   }
 
   @Override
@@ -49,7 +49,7 @@ public class BlockSubTypedAssetGenerator extends
 
       this.writeFile(content, file);
 
-      LOG.info("Generated: " + filename);
+      this.loggerService.info("Generated: " + filename);
     }
   }
 
@@ -73,7 +73,7 @@ public class BlockSubTypedAssetGenerator extends
 
       this.writeFile(content, file);
 
-      LOG.info("Generated: " + filename);
+      this.loggerService.info("Generated: " + filename);
     }
   }
 
@@ -94,7 +94,7 @@ public class BlockSubTypedAssetGenerator extends
 
     this.writeFile(content, file);
 
-    LOG.info("Generated: " + filename);
+    this.loggerService.info("Generated: " + filename);
   }
 
   private String getVariantEntries(String property, String modId, String prefix, String[] metalTypes) {
