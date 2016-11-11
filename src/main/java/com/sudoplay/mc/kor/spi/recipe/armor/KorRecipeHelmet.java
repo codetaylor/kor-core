@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.recipe.armor;
 
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
-import com.sudoplay.mc.kor.spi.recipe.KorRecipeInput;
+import com.sudoplay.mc.kor.spi.recipe.KorRecipeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class KorRecipeHelmet extends
     KorRecipeCraftingShaped {
 
-  public KorRecipeHelmet(KorRecipeInput armorMaterial, Item outputArmor) {
+  public KorRecipeHelmet(KorRecipeItem armorMaterial, Item outputArmor) {
     super(
         new ItemStack(outputArmor),
         new Object[]{

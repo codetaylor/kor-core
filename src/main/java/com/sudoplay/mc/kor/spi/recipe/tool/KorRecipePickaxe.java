@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.recipe.tool;
 
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
-import com.sudoplay.mc.kor.spi.recipe.KorRecipeInput;
+import com.sudoplay.mc.kor.spi.recipe.KorRecipeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class KorRecipePickaxe extends
     KorRecipeCraftingShaped {
 
-  public KorRecipePickaxe(KorRecipeInput toolMaterial, KorRecipeInput handleMaterial, Item outputTool) {
+  public KorRecipePickaxe(KorRecipeItem toolMaterial, KorRecipeItem handleMaterial, Item outputTool) {
     super(
         new ItemStack(outputTool),
         new Object[]{

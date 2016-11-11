@@ -11,8 +11,8 @@ import com.sudoplay.mc.kor.spi.registry.provider.KorInitStrategyProvider;
   /* package */ void resolveRecipeComponentsInObjectArray(Object[] objectArray) {
     for (int i = 0; i < objectArray.length; i++) {
 
-      if (objectArray[i] instanceof KorRecipeInput) {
-        objectArray[i] = ((KorRecipeInput) objectArray[i]).get();
+      if (objectArray[i] instanceof KorRecipeItem) {
+        objectArray[i] = ((KorRecipeItem) objectArray[i]).getItemStack();
       }
     }
   }

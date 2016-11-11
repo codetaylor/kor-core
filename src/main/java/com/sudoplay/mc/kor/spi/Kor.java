@@ -28,6 +28,7 @@ import com.sudoplay.mc.kor.spi.event.internal.*;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
+import com.sudoplay.mc.kor.spi.recipe.KorRecipeSmelting;
 import com.sudoplay.mc.kor.spi.registry.ForgeEventListener;
 import com.sudoplay.mc.kor.spi.registry.provider.*;
 import com.sudoplay.mc.kor.spi.registry.strategy.*;
@@ -259,6 +260,7 @@ public abstract class Kor {
               KorArmorMaterial.class,
               KorToolMaterial.class,
               KorRecipeCraftingShaped.class,
+              KorRecipeSmelting.class,
               KorWorldGen.class,
               KorForgeEventHandler.class
           },
