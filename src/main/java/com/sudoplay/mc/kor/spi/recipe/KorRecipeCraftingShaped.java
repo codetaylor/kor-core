@@ -46,10 +46,10 @@ public class KorRecipeCraftingShaped extends
   @Override
   public KorInitStrategy getInitStrategy() {
     return (mod) -> {
-      GameRegistry.addShapedRecipe(this.output, this.params);
+      GameRegistry.addRecipe(new ShapedOreRecipe(this.output, this.params));
 
       if (this.mirroredParams != null) {
-        GameRegistry.addShapedRecipe(this.output, this.mirroredParams);
+        GameRegistry.addRecipe(new ShapedOreRecipe(this.output, this.mirroredParams));
       }
     };
   }
