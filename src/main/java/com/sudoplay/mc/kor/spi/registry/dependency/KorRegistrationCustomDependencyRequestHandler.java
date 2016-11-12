@@ -1,4 +1,4 @@
-package com.sudoplay.mc.kor.spi.registry;
+package com.sudoplay.mc.kor.spi.registry.dependency;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface KorRegistrationCustomDependency {
-  KorCustomDependency[] dependsOn();
+public @interface KorRegistrationCustomDependencyRequestHandler {
+  Class<? extends KorCustomDependencyRequestHandler> handler();
 }

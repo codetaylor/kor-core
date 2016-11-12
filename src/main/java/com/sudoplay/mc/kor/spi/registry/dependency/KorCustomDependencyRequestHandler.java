@@ -1,4 +1,4 @@
-package com.sudoplay.mc.kor.spi.registry;
+package com.sudoplay.mc.kor.spi.registry.dependency;
 
 /**
  * Created by sk3lls on 11/10/2016.

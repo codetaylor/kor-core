@@ -3,6 +3,7 @@ package com.sudoplay.mc.kor.spi.recipe;
 import com.sudoplay.mc.kor.spi.registry.strategy.KorInitStrategy;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.Arrays;
 

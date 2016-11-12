@@ -1,4 +1,4 @@
-package com.sudoplay.mc.kor.spi.registry;
+package com.sudoplay.mc.kor.spi.registry.dependency;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

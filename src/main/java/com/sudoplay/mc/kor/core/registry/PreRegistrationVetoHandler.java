@@ -6,7 +6,7 @@ import com.sudoplay.mc.kor.core.log.LoggerService;
 import com.sudoplay.mc.kor.core.registry.service.IRegistryServicePreRegistrationHook;
 import com.sudoplay.mc.kor.core.registry.service.injection.RegistryObjectInjector;
 import com.sudoplay.mc.kor.spi.event.external.KorExternalEvent;
-import com.sudoplay.mc.kor.spi.registry.*;
+import com.sudoplay.mc.kor.spi.registry.dependency.*;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +49,6 @@ public class PreRegistrationVetoHandler implements
     boolean potentialClassShouldBeRegistered = checkClassDependencies(potentialClass, trail);
 
     if (!potentialClassShouldBeRegistered) {
-      this.loggerService.info("[preRegister] %s cancelled by dependency trail: %s", potentialClass.getSimpleName(), trail);
       return false;
     }
 
@@ -57,7 +56,7 @@ public class PreRegistrationVetoHandler implements
     potentialClassShouldBeRegistered = !MinecraftForge.EVENT_BUS.post(potentialRegistrationEvent);
 
     if (!potentialClassShouldBeRegistered) {
-      this.loggerService.info("[preRegister] %s cancelled by event", potentialClass.getSimpleName());
+      this.loggerService.info("Registration of [%s] cancelled by event", potentialClass.getSimpleName());
     }
 
     return potentialClassShouldBeRegistered;
@@ -88,7 +87,7 @@ public class PreRegistrationVetoHandler implements
 
             if (textConfigData == null) {
               throw new IllegalStateException(String.format(
-                  "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
+                  "Class [%s] is annotated with @KorRegistrationTextConfigDependency, " +
                       "but the config file referenced in the annotation isn't loaded. Make sure " +
                       "the config file is loaded in the module's onLoadConfigurationsEvent.",
                   potentialClass
@@ -99,9 +98,9 @@ public class PreRegistrationVetoHandler implements
 
             if (configValue == null) {
               throw new IllegalStateException(String.format(
-                  "Class %s is annotated with @KorRegistrationTextConfigDependency, " +
+                  "Class [%s] is annotated with @KorRegistrationTextConfigDependency, " +
                       "but the config file referenced in the annotation doesn't have the " +
-                      "specified key %s in category %s.",
+                      "specified key [%s] in category [%s].",
                   potentialClass,
                   key,
                   category
@@ -109,6 +108,7 @@ public class PreRegistrationVetoHandler implements
             }
 
             if (!configValue) {
+              this.loggerService.info("Registration of [%s] cancelled by config: filename=[%s], category=[%s], key=[%s]", potentialClass.getSimpleName(), filename, category, key);
               return false;
             }
           }
@@ -140,7 +140,7 @@ public class PreRegistrationVetoHandler implements
 
           if (customDependencyRequestHandlerAnnotation == null) {
             throw new IllegalStateException(String.format(
-                "Class %s has a custom dependency on class %s, but class %s doesn't provide a " +
+                "Class [%s] has a custom dependency on class [%s], but class [%s] doesn't provide a " +
                     "@KorRegistrationCustomDependencyRequestHandler annotation",
                 potentialClass,
                 target,
@@ -160,6 +160,7 @@ public class PreRegistrationVetoHandler implements
           result = handler.onCustomDependencyRequest(payload);
 
           if (!result) {
+            this.loggerService.info("Registration of [%s] cancelled by custom dependency: target=[%s], payload=[%s]", potentialClass.getSimpleName(), target, payload);
             return false;
           }
         }
@@ -178,7 +179,7 @@ public class PreRegistrationVetoHandler implements
           // check for cyclic dependencies
           if (trail.contains(aClass)) {
             throw new IllegalStateException(String.format(
-                "Cyclic class dependency detected for class %s [trail: %s]",
+                "Cyclic class dependency detected for class [%s], trail: [%s]",
                 potentialClass,
                 trail
             ));

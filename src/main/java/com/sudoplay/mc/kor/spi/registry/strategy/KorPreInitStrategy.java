@@ -1,13 +1,21 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
-import com.sudoplay.mc.kor.spi.item.KorSubTypedItemBlock;
 import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
+import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
+import com.sudoplay.mc.kor.spi.item.KorSubTypedItemBlock;
+import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntry;
+import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntryProvider;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sk3lls on 10/30/2016.
@@ -39,6 +47,19 @@ public interface KorPreInitStrategy {
       itemBlock.setRegistryName(this.block.getRegistryName());
       GameRegistry.register(this.block);
       GameRegistry.register(itemBlock);
+
+      if (this.block instanceof KorOreDictionaryEntryProvider) {
+        List<KorOreDictionaryEntry> korOreDictionaryEntries;
+
+        korOreDictionaryEntries = new ArrayList<>();
+        ((KorOreDictionaryEntryProvider) this.block).getKorOreDictionaryEntries(korOreDictionaryEntries);
+
+        for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
+          int meta = entry.getMeta();
+          String name = entry.getName();
+          OreDictionary.registerOre(name, new ItemStack(this.block, 1, meta));
+        }
+      }
     }
   }
 
@@ -49,14 +70,14 @@ public interface KorPreInitStrategy {
   class SubTypedBlock implements
       KorPreInitStrategy {
 
-    private Block block;
+    private KorSubTypedEnumBlock<?> block;
 
     SubTypedBlock(Block block) {
 
       if (!(block instanceof KorSubTypedEnumBlock)) {
-        throw new IllegalArgumentException("EnumBlock strategy requires block to extend KorSubTypedBlock");
+        throw new IllegalArgumentException("SubTypedBlock strategy requires block to extend KorSubTypedBlock");
       }
-      this.block = block;
+      this.block = (KorSubTypedEnumBlock) block;
     }
 
     @Override
@@ -67,6 +88,38 @@ public interface KorPreInitStrategy {
       korSubTypedItemBlock.setRegistryName(this.block.getRegistryName());
       GameRegistry.register(this.block);
       GameRegistry.register(korSubTypedItemBlock);
+
+      if (this.block instanceof KorOreDictionaryEntryProvider) {
+
+        List<KorOreDictionaryEntry> korOreDictionaryEntries;
+        List<ISubType> validSubTypes;
+
+        korOreDictionaryEntries = new ArrayList<>();
+        this.block.getKorOreDictionaryEntries(korOreDictionaryEntries);
+        validSubTypes = this.block.getSubTypes();
+
+        for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
+          boolean isEnabledOreDictionaryEntry;
+
+          isEnabledOreDictionaryEntry = false;
+
+          int meta = entry.getMeta();
+
+          for (ISubType subType : validSubTypes) {
+
+            if (meta == subType.getMeta()) {
+              // found a match, is enabled ore dict entry
+              isEnabledOreDictionaryEntry = true;
+              break;
+            }
+          }
+
+          if (isEnabledOreDictionaryEntry) {
+            OreDictionary.registerOre(entry.getName(), new ItemStack(this.block, 1, meta));
+            System.out.println(String.format("Registered [%s:%d]", entry.getName(), meta));
+          }
+        }
+      }
     }
   }
 
@@ -86,6 +139,19 @@ public interface KorPreInitStrategy {
     @Override
     public void onPreInit(Kor mod) {
       GameRegistry.register(this.item);
+
+      if (this.item instanceof KorOreDictionaryEntryProvider) {
+        List<KorOreDictionaryEntry> korOreDictionaryEntries;
+
+        korOreDictionaryEntries = new ArrayList<>();
+        ((KorOreDictionaryEntryProvider) this.item).getKorOreDictionaryEntries(korOreDictionaryEntries);
+
+        for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
+          int meta = entry.getMeta();
+          String name = entry.getName();
+          OreDictionary.registerOre(name, new ItemStack(this.item, 1, meta));
+        }
+      }
     }
   }
 
@@ -96,19 +162,51 @@ public interface KorPreInitStrategy {
   class SubTypedItem implements
       KorPreInitStrategy {
 
-    private Item item;
+    private KorSubTypedItem item;
 
     SubTypedItem(Item item) {
 
       if (!(item instanceof KorSubTypedItem)) {
         throw new RuntimeException("SubTypedItemRegisterStrategy requires item to implement ISubTypedItem");
       }
-      this.item = item;
+      this.item = (KorSubTypedItem) item;
     }
 
     @Override
     public void onPreInit(Kor mod) {
       GameRegistry.register(this.item);
+
+      if (this.item instanceof KorOreDictionaryEntryProvider) {
+
+        List<KorOreDictionaryEntry> korOreDictionaryEntries;
+        ISubType[] validSubTypes;
+
+        korOreDictionaryEntries = new ArrayList<>();
+        ((KorOreDictionaryEntryProvider) this.item).getKorOreDictionaryEntries(korOreDictionaryEntries);
+        validSubTypes = this.item.getSubTypes();
+
+        for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
+          boolean isEnabledOreDictionaryEntry;
+
+          isEnabledOreDictionaryEntry = false;
+
+          int meta = entry.getMeta();
+
+          for (ISubType subType : validSubTypes) {
+
+            if (meta == subType.getMeta()) {
+              // found a match, is enabled ore dict entry
+              isEnabledOreDictionaryEntry = true;
+              break;
+            }
+          }
+
+          if (isEnabledOreDictionaryEntry) {
+            OreDictionary.registerOre(entry.getName(), new ItemStack(this.item, 1, meta));
+          }
+        }
+      }
+
     }
   }
 }

@@ -2,6 +2,8 @@ package com.sudoplay.mc.kor.spi.block;
 
 import com.sudoplay.mc.kor.core.IntMap;
 import com.sudoplay.mc.kor.spi.item.ISubType;
+import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntry;
+import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntryProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientPreInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorPreInitStrategyProvider;
@@ -33,6 +35,7 @@ import java.util.List;
  */
 public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
     Block implements
+    KorOreDictionaryEntryProvider,
     KorPreInitStrategyProvider.SubTypedBlock,
     KorClientPreInitStrategyProvider.SubTypedBlock,
     KorClientInitStrategyProvider.SubTypedBlock {
@@ -148,6 +151,12 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
     Item itemFromBlock = Item.getItemFromBlock(this);
     assert itemFromBlock != null;
     return new ItemStack(itemFromBlock, 1, getMetaFromState(world.getBlockState(pos)));
+  }
+
+  @Override
+  @Nonnull
+  public List<KorOreDictionaryEntry> getKorOreDictionaryEntries(@Nonnull List<KorOreDictionaryEntry> store) {
+    return store;
   }
 
   /**
