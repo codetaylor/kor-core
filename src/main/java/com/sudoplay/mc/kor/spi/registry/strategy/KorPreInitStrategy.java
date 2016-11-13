@@ -116,7 +116,7 @@ public interface KorPreInitStrategy {
 
           if (isEnabledOreDictionaryEntry) {
             OreDictionary.registerOre(entry.getName(), new ItemStack(this.block, 1, meta));
-            System.out.println(String.format("Registered [%s:%d]", entry.getName(), meta));
+            //System.out.println(String.format("Registered OreDict: [%s:%d]", entry.getName(), meta));
           }
         }
       }

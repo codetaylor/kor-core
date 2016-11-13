@@ -1,5 +1,6 @@
 package com.sudoplay.mc.kor.spi.item;
 
+import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntryProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientPreInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorPreInitStrategyProvider;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public abstract class KorSubTypedItem extends
     KorItemTooltip implements
+    KorOreDictionaryEntryProvider,
     KorPreInitStrategyProvider.SubTypedItem,
     KorClientPreInitStrategyProvider.SubTypedItem,
     KorClientInitStrategyProvider.SubTypedItem {

@@ -9,6 +9,7 @@ import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 import com.sudoplay.mc.kor.spi.IKorModule;
 import com.sudoplay.mc.kor.spi.event.internal.OnRegisterBlocksEvent;
 import com.sudoplay.mc.kor.spi.event.internal.OnRegisterCreativeTabsEvent;
+import com.sudoplay.mc.kor.spi.event.internal.OnRegisterItemsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,6 +55,7 @@ public class AssetGenerator {
     Generator generator = new Generator(this.assetInputPath, this.assetOutputPath, loggerService);
     eventService.publish(new OnRegisterCreativeTabsEvent(generator));
     eventService.publish(new OnRegisterBlocksEvent(generator));
+    eventService.publish(new OnRegisterItemsEvent(generator));
     this.langEntriesGenerator.flush();
   }
 
@@ -92,6 +94,11 @@ public class AssetGenerator {
       this.map.put(
           KorGenerateImageSlices.class,
           new ImageSliceGenerator(assetInputPath, assetOutputPath, new ImageSlicer(), loggerService)
+      );
+
+      this.map.put(
+          KorGenerateItemSubTypedAssets.class,
+          new ItemSubTypedAssetGenerator(assetOutputPath, loggerService)
       );
     }
 
