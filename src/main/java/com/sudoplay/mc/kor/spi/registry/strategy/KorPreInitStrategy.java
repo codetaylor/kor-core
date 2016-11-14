@@ -23,7 +23,7 @@ import java.util.List;
 public interface KorPreInitStrategy {
 
   void onPreInit(
-      Kor mod
+      Kor kor
   );
 
   static BasicBlock createBasicBlockStrategy(Block block) {

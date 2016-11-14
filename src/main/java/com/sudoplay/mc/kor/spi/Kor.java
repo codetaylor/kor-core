@@ -28,8 +28,10 @@ import com.sudoplay.mc.kor.spi.event.internal.*;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
+import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShapeless;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeSmelting;
 import com.sudoplay.mc.kor.spi.registry.ForgeEventListener;
+import com.sudoplay.mc.kor.spi.registry.KorRegistrationDelegate;
 import com.sudoplay.mc.kor.spi.registry.provider.*;
 import com.sudoplay.mc.kor.spi.registry.strategy.*;
 import com.sudoplay.mc.kor.spi.world.KorWorldGen;
@@ -257,8 +259,10 @@ public abstract class Kor {
               Block.class,
               CreativeTabs.class,
               Item.class,
+              KorRegistrationDelegate.class,
               KorArmorMaterial.class,
               KorToolMaterial.class,
+              KorRecipeCraftingShapeless.class,
               KorRecipeCraftingShaped.class,
               KorRecipeSmelting.class,
               KorWorldGen.class,
@@ -286,7 +290,7 @@ public abstract class Kor {
 
         if (registeredObject instanceof KorRegistrationStrategyProvider) {
           KorRegistrationStrategy initializationStrategy = ((KorRegistrationStrategyProvider) registeredObject).getRegistrationStrategy();
-          initializationStrategy.onRegistration(this);
+          initializationStrategy.onRegistration(this, this.registryService);
         }
       });
     }

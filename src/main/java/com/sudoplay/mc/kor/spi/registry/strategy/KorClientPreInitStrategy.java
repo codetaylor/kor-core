@@ -18,7 +18,7 @@ import java.util.List;
 public interface KorClientPreInitStrategy {
 
   void onClientPreInit(
-      Kor mod
+      Kor kor
   );
 
   static BasicItem createBasicItemStrategy(Item item) {

@@ -46,7 +46,7 @@ public class KorArmorMaterial implements
 
   @Override
   public KorRegistrationStrategy getRegistrationStrategy() {
-    return (mod) -> this.armorMaterial = EnumHelper.addArmorMaterial(
+    return (mod, registryService) -> this.armorMaterial = EnumHelper.addArmorMaterial(
         this.name,
         this.textureName,
         this.durability,

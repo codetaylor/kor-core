@@ -1,5 +1,6 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
+import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 import com.sudoplay.mc.kor.spi.Kor;
 
 /**
@@ -8,6 +9,7 @@ import com.sudoplay.mc.kor.spi.Kor;
 public interface KorRegistrationStrategy {
 
   void onRegistration(
-      Kor mod
+      Kor kor,
+      IRegistryService registryService
   );
 }

@@ -8,6 +8,6 @@ import com.sudoplay.mc.kor.spi.Kor;
 public interface KorInitStrategy {
 
   void onInit(
-      Kor mod
+      Kor kor
   );
 }

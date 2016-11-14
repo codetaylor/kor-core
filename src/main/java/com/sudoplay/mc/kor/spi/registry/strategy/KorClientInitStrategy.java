@@ -17,7 +17,7 @@ import java.util.List;
 public interface KorClientInitStrategy {
 
   void onClientInit(
-      Kor mod
+      Kor kor
   );
 
   static SubTypedItem createSubTypedItemStrategy(Item item) {

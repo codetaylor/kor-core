@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER})
 public @interface KorTextConfig {
 
-  String path();
+  String path() default "";
 
   String file();
 }

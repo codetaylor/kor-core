@@ -35,7 +35,7 @@ public class TextConfigParameterStrategy implements
     String file = annotation.file();
     String path = annotation.path();
 
-    String filename = new File(path, file).getPath();
+    String filename = (path.length() > 0) ? new File(path, file).getPath() : new File(file).getPath();
 
     TextConfigData textConfigData = this.service.get(filename);
 

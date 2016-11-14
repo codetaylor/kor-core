@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.material;
 
-import com.sudoplay.mc.kor.spi.registry.strategy.KorRegistrationStrategy;
 import com.sudoplay.mc.kor.spi.registry.provider.KorRegistrationStrategyProvider;
+import com.sudoplay.mc.kor.spi.registry.strategy.KorRegistrationStrategy;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.util.EnumHelper;
@@ -43,7 +43,7 @@ public class KorToolMaterial implements
 
   @Override
   public KorRegistrationStrategy getRegistrationStrategy() {
-    return (mod) -> this.toolMaterial = EnumHelper.addToolMaterial(
+    return (mod, registryService) -> this.toolMaterial = EnumHelper.addToolMaterial(
         this.name,
         this.harvestLevel,
         this.maxUses,
