@@ -113,6 +113,57 @@ public class PreRegistrationVetoHandler implements
             }
           }
         }
+
+        annotations = textConfigDependencyAnnotation.dependsOnAtLeastOneOf();
+
+        if (annotations.length > 0) {
+
+          boolean atLeastOne = false;
+
+          for (KorTextConfigDependency annotation : annotations) {
+
+            if (annotation != null) {
+              // check boolean value
+              String filename = annotation.filename();
+              String category = annotation.category();
+              String key = annotation.key();
+
+              TextConfigData textConfigData = this.textConfigService.get(filename);
+
+              if (textConfigData == null) {
+                throw new IllegalStateException(String.format(
+                    "Class [%s] is annotated with @KorRegistrationTextConfigDependency, " +
+                        "but the config file referenced in the annotation isn't loaded. Make sure " +
+                        "the config file is loaded in the module's onLoadConfigurationsEvent.",
+                    potentialClass
+                ));
+              }
+
+              Boolean configValue = textConfigData.getCategory(category).getBoolean(key);
+
+              if (configValue == null) {
+                throw new IllegalStateException(String.format(
+                    "Class [%s] is annotated with @KorRegistrationTextConfigDependency, " +
+                        "but the config file referenced in the annotation doesn't have the " +
+                        "specified key [%s] in category [%s].",
+                    potentialClass,
+                    key,
+                    category
+                ));
+              }
+
+              if (configValue) {
+                atLeastOne = true;
+                break;
+              }
+            }
+          }
+
+          if (!atLeastOne) {
+            this.loggerService.info("Registration of [%s] cancelled by config", potentialClass.getSimpleName());
+            return false;
+          }
+        }
       }
     }
 

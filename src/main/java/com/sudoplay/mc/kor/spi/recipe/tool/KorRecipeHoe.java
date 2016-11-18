@@ -15,13 +15,13 @@ public class KorRecipeHoe extends
     super(
         new ItemStack(outputTool),
         new Object[]{
+            true,
             "##",
             " |",
             " |",
             '#', toolMaterial,
             '|', handleMaterial
-        },
-        Mirrored.True
+        }
     );
   }
 }

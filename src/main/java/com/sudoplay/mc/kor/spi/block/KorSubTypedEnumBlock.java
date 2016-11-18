@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,11 +45,6 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
   private final PropertyEnum<E> property;
 
   /**
-   * This list contains only the enum values allowed by the mask
-   */
-  private final List<ISubType> subTypeList;
-
-  /**
    * This map contains all enum values
    */
   private final IntMap<E> subTypeIntMap;
@@ -61,35 +56,15 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
       PropertyEnum<E> property,
       Class<E> enumClass
   ) {
-    this(modId, name, material, property, enumClass, null);
-  }
-
-  public KorSubTypedEnumBlock(
-      String modId,
-      String name,
-      Material material,
-      PropertyEnum<E> property,
-      Class<E> enumClass,
-      boolean[] mask
-  ) {
     super(KorSubTypedEnumBlock.hook(material, property), material.getMaterialMapColor());
     this.property = property;
 
     E[] enumConstants = enumClass.getEnumConstants();
 
-    if (mask != null && enumConstants.length != mask.length) {
-      throw new IllegalArgumentException(String.format("Mask length doesn't equal enum length for: %s", name));
-    }
-
-    this.subTypeList = new ArrayList<>();
     this.subTypeIntMap = new IntMap<>();
 
     for (int i = 0; i < enumConstants.length; i++) {
       this.subTypeIntMap.put(enumConstants[i].getMeta(), enumConstants[i]);
-
-      if (mask == null || mask[i]) {
-        this.subTypeList.add(enumConstants[i]);
-      }
     }
 
     this.setUnlocalizedName(name);
@@ -105,8 +80,7 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
   @Override
   public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list) {
 
-    for (ISubType subType : this.subTypeList) {
-
+    for (ISubType subType : this.property.getAllowedValues()) {
       list.add(new ItemStack(this, 1, subType.getMeta()));
     }
   }
@@ -126,7 +100,8 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
   @Nonnull
   @Override
   public IBlockState getStateFromMeta(int meta) {
-    return this.getDefaultState().withProperty(this.property, fromMeta(meta));
+    //noinspection unchecked
+    return this.getDefaultState().withProperty(this.property, (E) getSubType(meta));
   }
 
   @Override
@@ -159,21 +134,11 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
     return store;
   }
 
-  /**
-   * @return only valid subtypes
-   */
-  public List<ISubType> getSubTypes() {
-    return this.subTypeList;
+  public Collection<E> getSubTypes() {
+    return this.property.getAllowedValues();
   }
 
-  /**
-   * @return IntMap of all possible ISubType mapped by meta
-   */
-  public IntMap<E> getSubTypeIntMap() {
-    return this.subTypeIntMap;
-  }
-
-  private E fromMeta(int meta) {
+  public ISubType getSubType(int meta) {
     return this.subTypeIntMap.get(meta);
   }
 }

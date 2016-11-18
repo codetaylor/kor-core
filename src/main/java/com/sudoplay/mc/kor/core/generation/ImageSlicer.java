@@ -25,6 +25,7 @@ public class ImageSlicer {
     bufferedImageSlice = getBufferedImageSlice(sourceImage, sliceWidth, sliceHeight, col, row);
 
     File output = new File(outputFilename + ".png");
+    output.getParentFile().mkdirs();
     ImageIO.write(bufferedImageSlice, "png", output);
   }
 

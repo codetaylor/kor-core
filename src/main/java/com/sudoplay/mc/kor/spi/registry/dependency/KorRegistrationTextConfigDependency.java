@@ -12,5 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface KorRegistrationTextConfigDependency {
 
-  KorTextConfigDependency[] dependsOn();
+  KorTextConfigDependency[] dependsOn() default {};
+
+  KorTextConfigDependency[] dependsOnAtLeastOneOf() default {};
 }

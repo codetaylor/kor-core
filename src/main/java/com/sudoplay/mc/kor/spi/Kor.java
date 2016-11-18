@@ -11,6 +11,8 @@ import com.sudoplay.mc.kor.core.event.service.EventService;
 import com.sudoplay.mc.kor.core.event.service.IEventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
 import com.sudoplay.mc.kor.core.log.LoggerService;
+import com.sudoplay.mc.kor.core.recipe.RecipeItemWhiteList;
+import com.sudoplay.mc.kor.core.recipe.RecipeFileParser;
 import com.sudoplay.mc.kor.core.registry.FilterBuckets;
 import com.sudoplay.mc.kor.core.registry.PreRegistrationVetoHandler;
 import com.sudoplay.mc.kor.core.registry.service.RegistryService;
@@ -23,7 +25,7 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.IP
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.KorParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.TextConfigParameterStrategy;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
-import com.sudoplay.mc.kor.spi.event.KorForgeEventHandler;
+import com.sudoplay.mc.kor.spi.event.KorForgeEventSubscriber;
 import com.sudoplay.mc.kor.spi.event.internal.*;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
@@ -59,17 +61,21 @@ public abstract class Kor {
   private static final Map<String, Kor> INSTANCES = new HashMap<>();
 
   private Map<String, IKorModule> moduleMap;
-  private LoggerService loggerService;
+
   private IEventService eventService;
+  private LoggerService loggerService;
   private ITextConfigService textConfigService;
   private IConfigService configService;
   private RegistryService registryService;
   private FilterBuckets registrationStrategyProviderBuckets;
+  private RecipeItemWhiteList recipeItemWhiteList;
+  private RecipeFileParser recipeFileParser;
 
   protected Kor() {
     String modId = this.getModId();
     INSTANCES.put(modId, this);
     this.moduleMap = new HashMap<>();
+    this.recipeItemWhiteList = new RecipeItemWhiteList(modId);
 
     { // Init Logging
       Logger modLog = LogManager.getLogger(modId);
@@ -78,7 +84,9 @@ public abstract class Kor {
     }
 
     { // Registration Event Service
-      this.eventService = new EventService(new LogErrorEventExceptionHandler(this.loggerService));
+      if (this.eventService == null) {
+        this.eventService = new EventService(new LogErrorEventExceptionHandler(new LoggerService(LogManager.getLogger("KorEventService"))));
+      }
     }
   }
 
@@ -112,6 +120,10 @@ public abstract class Kor {
 
   public LoggerService getLoggerService() {
     return this.loggerService;
+  }
+
+  public RecipeFileParser getRecipeFileParser() {
+    return this.recipeFileParser;
   }
 
   // --------------------------------------------------------------------------
@@ -157,8 +169,6 @@ public abstract class Kor {
   }
 
   protected void onInitialization(FMLInitializationEvent event) {
-    //registryServiceCallbackProvider.callRegisterEventListeners(mod);
-
     this.loggerService.info("Kor Register Recipes Phase...");
     this.executeRegisterRecipesStrategies(this);
 
@@ -234,6 +244,14 @@ public abstract class Kor {
       );
     }
 
+    { // Init recipe service
+      this.recipeFileParser = new RecipeFileParser(
+          this.getModId(),
+          this.recipeItemWhiteList,
+          this.loggerService
+      );
+    }
+
     { // Init strategy provider buckets
       this.registrationStrategyProviderBuckets = new FilterBuckets(new Class[]{
           KorRegistrationStrategyProvider.class,
@@ -266,7 +284,7 @@ public abstract class Kor {
               KorRecipeCraftingShaped.class,
               KorRecipeSmelting.class,
               KorWorldGen.class,
-              KorForgeEventHandler.class
+              KorForgeEventSubscriber.class
           },
           registryObjectInjector,
           this.loggerService
@@ -284,7 +302,7 @@ public abstract class Kor {
         Class<?> registeredObjectClass = registeredObject.getClass();
         ForgeEventListener annotation = registeredObjectClass.getAnnotation(ForgeEventListener.class);
 
-        if (annotation != null || KorForgeEventHandler.class.isAssignableFrom(registeredObjectClass)) {
+        if (annotation != null || KorForgeEventSubscriber.class.isAssignableFrom(registeredObjectClass)) {
           MinecraftForge.EVENT_BUS.register(registeredObject);
         }
 
@@ -292,6 +310,8 @@ public abstract class Kor {
           KorRegistrationStrategy initializationStrategy = ((KorRegistrationStrategyProvider) registeredObject).getRegistrationStrategy();
           initializationStrategy.onRegistration(this, this.registryService);
         }
+
+        this.recipeItemWhiteList.offer(registeredObject);
       });
     }
   }

@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by sk3lls on 10/30/2016.
@@ -90,7 +90,7 @@ public interface KorClientPreInitStrategy {
 
       KorSubTypedEnumBlock block = (KorSubTypedEnumBlock) this.block;
       //noinspection unchecked
-      List<ISubType> subTypes = block.getSubTypes();
+      Collection<ISubType> subTypes = block.getSubTypes();
 
       for (ISubType subType : subTypes) {
         meta = subType.getMeta();

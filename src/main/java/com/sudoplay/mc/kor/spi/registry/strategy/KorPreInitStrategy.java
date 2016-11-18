@@ -11,10 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,9 +44,11 @@ public interface KorPreInitStrategy {
     @Override
     public void onPreInit(Kor mod) {
       ItemBlock itemBlock;
+      ResourceLocation registryName;
 
+      registryName = this.block.getRegistryName();
       itemBlock = new ItemBlock(this.block);
-      itemBlock.setRegistryName(this.block.getRegistryName());
+      itemBlock.setRegistryName(registryName);
       GameRegistry.register(this.block);
       GameRegistry.register(itemBlock);
 
@@ -70,7 +74,7 @@ public interface KorPreInitStrategy {
   class SubTypedBlock implements
       KorPreInitStrategy {
 
-    private KorSubTypedEnumBlock<?> block;
+    private KorSubTypedEnumBlock block;
 
     SubTypedBlock(Block block) {
 
@@ -83,20 +87,22 @@ public interface KorPreInitStrategy {
     @Override
     public void onPreInit(Kor mod) {
       KorSubTypedItemBlock korSubTypedItemBlock;
+      Collection<ISubType> validSubTypes;
 
       korSubTypedItemBlock = new KorSubTypedItemBlock(this.block);
       korSubTypedItemBlock.setRegistryName(this.block.getRegistryName());
       GameRegistry.register(this.block);
       GameRegistry.register(korSubTypedItemBlock);
 
+      //noinspection unchecked
+      validSubTypes = this.block.getSubTypes();
+
       if (this.block instanceof KorOreDictionaryEntryProvider) {
 
         List<KorOreDictionaryEntry> korOreDictionaryEntries;
-        List<ISubType> validSubTypes;
 
         korOreDictionaryEntries = new ArrayList<>();
         this.block.getKorOreDictionaryEntries(korOreDictionaryEntries);
-        validSubTypes = this.block.getSubTypes();
 
         for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
           boolean isEnabledOreDictionaryEntry;
@@ -182,7 +188,7 @@ public interface KorPreInitStrategy {
         ISubType[] validSubTypes;
 
         korOreDictionaryEntries = new ArrayList<>();
-        ((KorOreDictionaryEntryProvider) this.item).getKorOreDictionaryEntries(korOreDictionaryEntries);
+        this.item.getKorOreDictionaryEntries(korOreDictionaryEntries);
         validSubTypes = this.item.getSubTypes();
 
         for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {

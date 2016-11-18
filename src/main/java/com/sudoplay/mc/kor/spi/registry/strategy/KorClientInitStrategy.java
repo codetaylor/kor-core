@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by sk3lls on 10/30/2016.
@@ -71,7 +71,7 @@ public interface KorClientInitStrategy {
       KorClientInitStrategy {
 
     private Block block;
-    private List<ISubType> subTypes;
+    private Collection<ISubType> subTypes;
 
     SubTypedBlock(Block block) {
 
