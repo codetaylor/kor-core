@@ -15,7 +15,6 @@ import com.sudoplay.mc.kor.core.recipe.shapeless.RecipeShapelessParser;
 import com.sudoplay.mc.kor.core.recipe.shapeless.RecipeShapelessValidator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +98,7 @@ public class RecipeFileParser {
       }
     }
 
-    for (Map.Entry<String, RecipeFurnace> entry : recipeFile.getRecipeFurnaceList().entrySet()) {
+    for (Map.Entry<String, RecipeFurnace> entry : recipeFile.getRecipeFurnaceMap().entrySet()) {
       String name = entry.getKey();
       RecipeFurnace recipe = entry.getValue();
 

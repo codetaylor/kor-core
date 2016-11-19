@@ -16,29 +16,29 @@ public class RecipeFile extends
     KorConfigObject {
 
   @SerializedName("shapeless")
-  protected Map<String, RecipeShapeless> recipeShapelessList;
+  protected Map<String, RecipeShapeless> recipeShapelessMap;
 
   @SerializedName("shaped")
-  protected Map<String, RecipeShaped> recipeShapedList;
+  protected Map<String, RecipeShaped> recipeShapedMap;
 
   @SerializedName("furnace")
-  protected Map<String, RecipeFurnace> recipeFurnaceList;
+  protected Map<String, RecipeFurnace> recipeFurnaceMap;
 
   public RecipeFile() {
-    this.recipeShapelessList = new LinkedHashMap<>();
-    this.recipeShapedList = new LinkedHashMap<>();
-    this.recipeFurnaceList = new LinkedHashMap<>();
+    this.recipeShapelessMap = new LinkedHashMap<>();
+    this.recipeShapedMap = new LinkedHashMap<>();
+    this.recipeFurnaceMap = new LinkedHashMap<>();
   }
 
   public Map<String, RecipeShapeless> getRecipeShapelessMap() {
-    return recipeShapelessList;
+    return recipeShapelessMap;
   }
 
   public Map<String, RecipeShaped> getRecipeShapedMap() {
-    return recipeShapedList;
+    return recipeShapedMap;
   }
 
-  public Map<String, RecipeFurnace> getRecipeFurnaceList() {
-    return recipeFurnaceList;
+  public Map<String, RecipeFurnace> getRecipeFurnaceMap() {
+    return recipeFurnaceMap;
   }
 }
