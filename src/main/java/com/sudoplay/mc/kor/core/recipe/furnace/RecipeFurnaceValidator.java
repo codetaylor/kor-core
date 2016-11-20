@@ -26,31 +26,32 @@ public class RecipeFurnaceValidator {
     ParseResult outputParseResult = results.getOutputParseResult();
 
     if (inputParseResult == ParseResult.NULL) {
-      this.loggerService.info(String.format("Input for furnace recipe [%s] can't be null", name));
+      this.loggerService.error(String.format("Input for furnace recipe [%s] can't be null", name));
       return false;
     }
 
     if (inputParseResult.getQuantity() > 1) {
-      this.loggerService.info(String.format("Input for furnace recipe [%s] must not have quantity larger than 1", name));
+      this.loggerService.error(String.format("Input for furnace recipe [%s] must not have quantity larger than 1", name));
+      return false;
     }
 
     if (outputParseResult == ParseResult.NULL) {
-      this.loggerService.info(String.format("Output for furnace recipe [%s] can't be null", name));
+      this.loggerService.error(String.format("Output for furnace recipe [%s] can't be null", name));
       return false;
     }
 
     if ("ore".equals(inputParseResult.getDomain())) {
-      this.loggerService.info(String.format("Input for furnace recipe [%s] can't be an ore dictionary value", name));
+      this.loggerService.error(String.format("Input for furnace recipe [%s] can't be an ore dictionary value", name));
       return false;
     }
 
     if ("ore".equals(outputParseResult.getDomain())) {
-      this.loggerService.info(String.format("Output for furnace recipe [%s] can't be an ore dictionary value", name));
+      this.loggerService.error(String.format("Output for furnace recipe [%s] can't be an ore dictionary value", name));
       return false;
     }
 
     if (!this.isValid(outputParseResult)) {
-      this.loggerService.info(String.format("Furnace recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
+      this.loggerService.error(String.format("Furnace recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
       return false;
     }
 

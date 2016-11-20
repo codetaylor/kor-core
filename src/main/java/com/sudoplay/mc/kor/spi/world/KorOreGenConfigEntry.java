@@ -1,4 +1,4 @@
-package com.sudoplay.mc.kor.spi.config.json.component.world.oregen;
+package com.sudoplay.mc.kor.spi.world;
 
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 
@@ -9,13 +9,18 @@ import java.util.List;
 /**
  * Created by sk3lls on 11/4/2016.
  */
-public abstract class KorOreGenConfig extends
+public class KorOreGenConfigEntry extends
     KorConfigObject {
 
   private int modGenerationWeight = 0;
   private List<DimensionProfile> dimensionProfileList = new ArrayList<>();
 
-  public KorOreGenConfig(
+  @SuppressWarnings("unused")
+  private KorOreGenConfigEntry() {
+    // serialization
+  }
+
+  public KorOreGenConfigEntry(
       int modGenerationWeight,
       DimensionProfile... dimensionProfiles
   ) {

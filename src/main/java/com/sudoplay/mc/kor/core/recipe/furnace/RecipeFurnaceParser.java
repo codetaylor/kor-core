@@ -2,6 +2,7 @@ package com.sudoplay.mc.kor.core.recipe.furnace;
 
 import com.sudoplay.mc.kor.core.recipe.ParseResult;
 import com.sudoplay.mc.kor.core.recipe.RecipeItemParser;
+import com.sudoplay.mc.kor.core.recipe.exception.MalformedRecipeItemException;
 
 public class RecipeFurnaceParser {
 
@@ -13,7 +14,7 @@ public class RecipeFurnaceParser {
     this.recipeItemParser = recipeItemParser;
   }
 
-  public RecipeFurnaceParseResults getRecipeFurnaceParseResults(String name, RecipeFurnace recipe) {
+  public RecipeFurnaceParseResults getRecipeFurnaceParseResults(String name, RecipeFurnace recipe) throws MalformedRecipeItemException {
 
     String output = recipe.getOutput();
     String input = recipe.getInput();

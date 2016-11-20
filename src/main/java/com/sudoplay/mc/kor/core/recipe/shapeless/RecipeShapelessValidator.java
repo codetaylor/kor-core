@@ -27,31 +27,31 @@ public class RecipeShapelessValidator {
     ParseResult outputParseResult = results.getOutputParseResult();
 
     if (outputParseResult == ParseResult.NULL) {
-      this.loggerService.info(String.format("Output for shapeless recipe [%s] can't be null", name));
+      this.loggerService.error(String.format("Output for shapeless recipe [%s] can't be null", name));
       return false;
     }
 
     if ("ore".equals(outputParseResult.getDomain())) {
-      this.loggerService.info(String.format("Output for shapeless recipe [%s] can't be an ore dictionary value", name));
+      this.loggerService.error(String.format("Output for shapeless recipe [%s] can't be an ore dictionary value", name));
       return false;
     }
 
     if (!this.isValid(outputParseResult)) {
-      this.loggerService.info(String.format("Shapeless recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
+      this.loggerService.error(String.format("Shapeless recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
       return false;
     }
 
     List<ParseResult> inputParseResultList = results.getInputParseResultList();
 
     if (inputParseResultList.size() > 9) {
-      this.loggerService.info(String.format("Malformed shapeless recipe [%s] too many input items, max is 9", name));
+      this.loggerService.error(String.format("Malformed shapeless recipe [%s] too many input items, max is 9", name));
       return false;
     }
 
     for (ParseResult result : inputParseResultList) {
 
       if (!this.isValid(result)) {
-        this.loggerService.info(String.format("Shapeless recipe [%s] not loaded because item [%s] has not been white-listed", name, result));
+        this.loggerService.error(String.format("Shapeless recipe [%s] not loaded because item [%s] has not been white-listed", name, result));
         return false;
       }
     }

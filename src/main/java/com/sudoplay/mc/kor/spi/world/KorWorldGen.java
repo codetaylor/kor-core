@@ -1,8 +1,6 @@
 package com.sudoplay.mc.kor.spi.world;
 
 import com.sudoplay.mc.kor.core.IntMap;
-import com.sudoplay.mc.kor.spi.config.json.component.world.oregen.DimensionProfile;
-import com.sudoplay.mc.kor.spi.config.json.component.world.oregen.KorOreGenConfig;
 import com.sudoplay.mc.kor.spi.registry.provider.KorInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.strategy.KorInitStrategy;
 import net.minecraft.block.Block;
@@ -24,7 +22,7 @@ import java.util.Random;
 /**
  * Created by sk3lls on 11/4/2016.
  */
-public abstract class KorWorldGen implements
+public class KorWorldGen implements
     IWorldGenerator,
     KorInitStrategyProvider {
 
@@ -40,31 +38,37 @@ public abstract class KorWorldGen implements
       this.worldGenMinable = worldGenMinable;
       this.dimensionProfile = dimensionProfile;
     }
-
   }
 
-  protected KorWorldGen(KorOreGenConfig config, IBlockState defaultState) {
+  public KorWorldGen(KorOreGenConfigEntry config, IBlockState defaultState) {
+
     this.modGenerationWeight = config.getModGenerationWeight();
     this.worldGenMap = new IntMap<>();
 
     for (DimensionProfile dimensionProfile : config.getDimensionProfileList()) {
       int dimensionId = dimensionProfile.getDimensionId();
-      List<DimensionProfileWorldGenPair> worldGenMinableList = this.worldGenMap.get(dimensionId);
-
-      if (worldGenMinableList == null) {
-        worldGenMinableList = new ArrayList<>();
-        this.worldGenMap.put(dimensionId, worldGenMinableList);
-      }
-
-      worldGenMinableList.add(new DimensionProfileWorldGenPair(
-          new WorldGenMinable(
-              defaultState,
-              dimensionProfile.getBlockCount(),
-              BlockMatcher.forBlock(Block.REGISTRY.getObject(new ResourceLocation(dimensionProfile.getMatchBlock())))
-          ),
-          dimensionProfile
-      ));
+      addDimensionProfile(defaultState, dimensionProfile, dimensionId);
     }
+  }
+
+  private void addDimensionProfile(IBlockState defaultState, DimensionProfile dimensionProfile, int dimensionId) {
+    List<DimensionProfileWorldGenPair> worldGenMinableList = this.worldGenMap.get(dimensionId);
+
+    if (worldGenMinableList == null) {
+      worldGenMinableList = new ArrayList<>();
+      this.worldGenMap.put(dimensionId, worldGenMinableList);
+    }
+
+    Block block = Block.REGISTRY.getObject(new ResourceLocation(dimensionProfile.getMatchBlock()));
+
+    worldGenMinableList.add(new DimensionProfileWorldGenPair(
+        new WorldGenMinable(
+            defaultState,
+            dimensionProfile.getBlockCount(),
+            BlockMatcher.forBlock(block)
+        ),
+        dimensionProfile
+    ));
   }
 
   @Override

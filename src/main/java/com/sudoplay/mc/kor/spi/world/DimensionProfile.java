@@ -1,4 +1,4 @@
-package com.sudoplay.mc.kor.spi.config.json.component.world.oregen;
+package com.sudoplay.mc.kor.spi.world;
 
 import com.sudoplay.mc.kor.spi.config.json.component.common.MinMaxInt;
 

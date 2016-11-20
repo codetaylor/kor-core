@@ -27,24 +27,24 @@ public class RecipeShapedValidator {
     ParseResult outputParseResult = results.getOutputParseResult();
 
     if (outputParseResult == ParseResult.NULL) {
-      this.loggerService.info(String.format("Output for shaped recipe [%s] can't be null", name));
+      this.loggerService.error(String.format("Output for shaped recipe [%s] can't be null", name));
       return false;
     }
 
     if ("ore".equals(outputParseResult.getDomain())) {
-      this.loggerService.info(String.format("Output for shaped recipe [%s] can't be an ore dictionary value", name));
+      this.loggerService.error(String.format("Output for shaped recipe [%s] can't be an ore dictionary value", name));
       return false;
     }
 
     if (!this.isValid(outputParseResult)) {
-      this.loggerService.info(String.format("Shaped recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
+      this.loggerService.error(String.format("Shaped recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
       return false;
     }
 
     List<List<ParseResult>> inputParseResultList = results.getInputParseResultList();
 
     if (inputParseResultList.size() > 3) {
-      this.loggerService.info(String.format("Malformed shaped recipe [%s] too many input rows, max is 3", name));
+      this.loggerService.error(String.format("Malformed shaped recipe [%s] too many input rows, max is 3", name));
       return false;
     }
 
@@ -54,7 +54,7 @@ public class RecipeShapedValidator {
       List<ParseResult> row = inputParseResultList.get(i);
 
       if (row.size() != rowSize) {
-        this.loggerService.info(String.format(
+        this.loggerService.error(String.format(
             "Malformed shaped recipe [%s] rows must be the same size, row %d has %d items, expected %d",
             name,
             i,
@@ -69,14 +69,14 @@ public class RecipeShapedValidator {
       List<ParseResult> row = inputParseResultList.get(i);
 
       if (row.size() > 3) {
-        this.loggerService.info(String.format("Malformed shaped recipe [%s] too many items in row %d", name, i));
+        this.loggerService.error(String.format("Malformed shaped recipe [%s] too many items in row %d", name, i));
         return false;
       }
 
       for (ParseResult result : row) {
 
         if (!this.isValid(result)) {
-          this.loggerService.info(String.format("Shaped recipe [%s] not loaded because item [%s] is not white-listed", name, result));
+          this.loggerService.error(String.format("Shaped recipe [%s] not loaded because item [%s] is not white-listed", name, result));
           return false;
         }
       }

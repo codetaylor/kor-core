@@ -3,7 +3,7 @@ package com.sudoplay.mc.kor.spi.recipe;
 import com.sudoplay.mc.kor.core.recipe.RecipeFile;
 import com.sudoplay.mc.kor.core.recipe.RecipeFileParseResults;
 import com.sudoplay.mc.kor.core.recipe.RecipeFileParser;
-import com.sudoplay.mc.kor.core.recipe.RecipeItemNotFoundInRegistry;
+import com.sudoplay.mc.kor.core.recipe.exception.RecipeItemNotFoundInRegistryException;
 import com.sudoplay.mc.kor.core.recipe.furnace.RecipeFurnaceParseResults;
 import com.sudoplay.mc.kor.core.recipe.furnace.RecipeFurnaceRegistrationDelegate;
 import com.sudoplay.mc.kor.core.recipe.shaped.RecipeShapedParseResults;
@@ -48,7 +48,7 @@ public class KorRecipeFileRegistrationDelegate extends
         try {
           this.recipeShapelessRegistrationDelegate.registerShapelessRecipe(results);
 
-        } catch (RecipeItemNotFoundInRegistry e) {
+        } catch (RecipeItemNotFoundInRegistryException e) {
           kor.getLoggerService().error(String.format("Failed to register shapeless recipe [%s]", results.getName()), e);
         }
       }
@@ -60,7 +60,7 @@ public class KorRecipeFileRegistrationDelegate extends
         try {
           this.recipeShapedRegistrationDelegate.registerShapedRecipe(results);
 
-        } catch (RecipeItemNotFoundInRegistry e) {
+        } catch (RecipeItemNotFoundInRegistryException e) {
           kor.getLoggerService().error(String.format("Failed to register shaped recipe [%s]", results.getName()), e);
         }
       }
@@ -72,7 +72,7 @@ public class KorRecipeFileRegistrationDelegate extends
         try {
           this.recipeFurnaceRegistrationDelegate.registerFurnaceRecipe(results);
 
-        } catch (RecipeItemNotFoundInRegistry e) {
+        } catch (RecipeItemNotFoundInRegistryException e) {
           kor.getLoggerService().error(String.format("Failed to register furnace recipe [%s]", results.getName()), e);
         }
       }
