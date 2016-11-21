@@ -36,7 +36,7 @@ import com.sudoplay.mc.kor.spi.registry.ForgeEventListener;
 import com.sudoplay.mc.kor.spi.registry.KorRegistrationDelegate;
 import com.sudoplay.mc.kor.spi.registry.provider.*;
 import com.sudoplay.mc.kor.spi.registry.strategy.*;
-import com.sudoplay.mc.kor.spi.world.KorWorldGen;
+import com.sudoplay.mc.kor.spi.world.KorOreGen;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -283,7 +283,7 @@ public abstract class Kor {
               KorRecipeCraftingShapeless.class,
               KorRecipeCraftingShaped.class,
               KorRecipeSmelting.class,
-              KorWorldGen.class,
+              KorOreGen.class,
               KorForgeEventSubscriber.class
           },
           registryObjectInjector,
