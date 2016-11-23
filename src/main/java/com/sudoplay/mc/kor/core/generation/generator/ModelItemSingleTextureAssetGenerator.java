@@ -29,14 +29,17 @@ public class ModelItemSingleTextureAssetGenerator extends
     String modId = annotation.modId();
 
     String content = "{\n" +
-        "  \"parent\": \"" + modId + ":block/" + name + "\"\n" +
+        "  \"parent\": \"item/generated\",\n" +
+        "  \"textures\": {\n" +
+        "    \"layer0\": \"" + modId + ":items/" + name + "\"\n" +
+        "  }\n" +
         "}";
 
-    String filename = name + ".json";
+    String filename = "models/item/" + name + ".json";
     File file = new File(this.outputFilePath, filename);
 
     this.writeFile(content, file);
 
-    this.loggerService.info("Generated Model: " + filename);
+    this.loggerService.info("Generated: " + filename);
   }
 }

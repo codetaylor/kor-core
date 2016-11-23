@@ -51,7 +51,7 @@ public class RecipeFurnaceValidator {
     }
 
     if (!this.isValid(outputParseResult)) {
-      this.loggerService.error(String.format("Furnace recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
+      this.loggerService.info(String.format("Furnace recipe [%s] not loaded because item [%s] has not been white-listed", name, outputParseResult));
       return false;
     }
 

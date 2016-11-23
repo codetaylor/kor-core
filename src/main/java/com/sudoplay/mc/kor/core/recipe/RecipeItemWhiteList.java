@@ -1,28 +1,32 @@
 package com.sudoplay.mc.kor.core.recipe;
 
+import com.sudoplay.mc.kor.core.recipe.exception.MalformedRecipeItemException;
 import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by sk3lls on 11/16/2016.
  */
 public class RecipeItemWhiteList {
 
-  private Set<String> whiteList;
+  private List<String> whiteList;
   private String modId;
+  private RecipeItemParser recipeItemParser;
 
   public RecipeItemWhiteList(
       String modId
   ) {
     this.modId = modId;
-    this.whiteList = new HashSet<>();
+    this.whiteList = new ArrayList<>();
+    this.recipeItemParser = new RecipeItemParser();
   }
 
   public void offer(Object object) {
@@ -52,6 +56,28 @@ public class RecipeItemWhiteList {
   }
 
   public boolean contains(String string) {
-    return this.whiteList.contains(string);
+
+    try {
+      ParseResult parse = this.recipeItemParser.parse(string);
+
+      if (parse.getMeta() == OreDictionary.WILDCARD_VALUE) {
+        // match with wildcard
+        String pattern = "^" + parse.getDomain() + ":" + parse.getPath() + ":\\d+$";
+
+        for (String whiteListedItem : this.whiteList) {
+
+          if (whiteListedItem.matches(pattern)) {
+            return true;
+          }
+        }
+        return false;
+
+      } else {
+        return this.whiteList.contains(string);
+      }
+
+    } catch (MalformedRecipeItemException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
