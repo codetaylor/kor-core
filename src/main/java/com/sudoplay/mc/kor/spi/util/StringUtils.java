@@ -1,9 +1,9 @@
-package com.sudoplay.mc.kor.spi.oredict;
+package com.sudoplay.mc.kor.spi.util;
 
 /**
  * Created by sk3lls on 11/16/2016.
  */
-public class OreDictUtil {
+public class StringUtils {
 
   /**
    * Takes a name written in snake-case, like_this or like_another_example, and
@@ -14,12 +14,12 @@ public class OreDictUtil {
    */
   public static String convertSnakeCaseToCamelCase(String name) {
     String[] parts = name.split("_");
-
     String newName = "";
 
     for (String part : parts) {
       newName += part.substring(0, 1).toUpperCase() + part.substring(1);
     }
+
     return newName;
   }
 
