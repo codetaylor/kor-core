@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER})
 public @interface KorJsonConfig {
 
-  String path();
+  String path() default "";
 
   String file();
 }
