@@ -32,17 +32,19 @@ public class RecipeItemWhiteList {
   public void offer(Object object) {
 
     if (object instanceof KorSubTypedEnumBlock) {
+      KorSubTypedEnumBlock block = (KorSubTypedEnumBlock) object;
       //noinspection unchecked
-      Collection<ISubType> subTypes = ((KorSubTypedEnumBlock) object).getSubTypes();
-      String resourcePath = ((KorSubTypedEnumBlock) object).getRegistryName().getResourcePath();
+      Collection<ISubType> subTypes = block.getSubTypes();
+      String resourcePath = block.getRegistryName().getResourcePath();
 
       for (ISubType subType : subTypes) {
         this.whiteList.add(this.modId + ":" + resourcePath + ":" + subType.getMeta());
       }
 
     } else if (object instanceof KorSubTypedItem) {
-      ISubType[] subTypes = ((KorSubTypedItem) object).getSubTypes();
-      String resourcePath = ((KorSubTypedItem) object).getRegistryName().getResourcePath();
+      KorSubTypedItem item = (KorSubTypedItem) object;
+      ISubType[] subTypes = item.getSubTypes();
+      String resourcePath = item.getRegistryName().getResourcePath();
 
       for (ISubType subType : subTypes) {
         this.whiteList.add(this.modId + ":" + resourcePath + ":" + subType.getMeta());

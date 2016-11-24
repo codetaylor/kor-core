@@ -13,6 +13,11 @@ public class KorConfigUtil {
     textConfigData.getCategory(category).putBoolean(key, value);
   }
 
+  public static void adaptInteger(String category, String key, int defaultValue, Configuration configuration, TextConfigData textConfigData) {
+    int value = configuration.get(category, key, defaultValue).getInt();
+    textConfigData.getCategory(category).putInteger(key, value);
+  }
+
   private KorConfigUtil() {
     //
   }
