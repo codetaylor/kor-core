@@ -1,6 +1,7 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
+import com.sudoplay.mc.kor.spi.block.IKorTileEntityProvider;
 import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
@@ -64,6 +65,14 @@ public interface KorPreInitStrategy {
           OreDictionary.registerOre(name, new ItemStack(this.block, 1, meta));
         }
       }
+
+      if (this.block instanceof IKorTileEntityProvider) {
+        IKorTileEntityProvider tileEntityProvider = (IKorTileEntityProvider) this.block;
+        GameRegistry.registerTileEntity(
+            tileEntityProvider.getTileEntityClass(),
+            tileEntityProvider.getTileEntityName()
+        );
+      }
     }
   }
 
@@ -125,6 +134,14 @@ public interface KorPreInitStrategy {
             //System.out.println(String.format("Registered OreDict: [%s:%d]", entry.getName(), meta));
           }
         }
+      }
+
+      if (this.block instanceof IKorTileEntityProvider) {
+        IKorTileEntityProvider tileEntityProvider = (IKorTileEntityProvider) this.block;
+        GameRegistry.registerTileEntity(
+            tileEntityProvider.getTileEntityClass(),
+            tileEntityProvider.getTileEntityName()
+        );
       }
     }
   }
