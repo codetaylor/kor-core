@@ -15,4 +15,6 @@ public @interface KorGenerateModelItemSingleTexture {
   String name();
 
   String modId();
+
+  String parent() default "item/generated";
 }

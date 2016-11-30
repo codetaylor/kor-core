@@ -27,9 +27,10 @@ public class ModelItemSingleTextureAssetGenerator extends
   public void generate(KorGenerateModelItemSingleTexture annotation) {
     String name = annotation.name();
     String modId = annotation.modId();
+    String parent = annotation.parent();
 
     String content = "{\n" +
-        "  \"parent\": \"item/generated\",\n" +
+        "  \"parent\": \"" + parent + "\",\n" +
         "  \"textures\": {\n" +
         "    \"layer0\": \"" + modId + ":items/" + name + "\"\n" +
         "  }\n" +
