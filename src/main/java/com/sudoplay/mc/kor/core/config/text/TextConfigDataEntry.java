@@ -9,11 +9,13 @@ import java.util.Map;
 public class TextConfigDataEntry {
 
   private Map<String, Integer> integerMap;
+  private Map<String, Double> doubleMap;
   private Map<String, Boolean> booleanMap;
   private Map<String, String> stringMap;
 
   /* package */ TextConfigDataEntry() {
     this.integerMap = new HashMap<>();
+    this.doubleMap = new HashMap<>();
     this.booleanMap = new HashMap<>();
     this.stringMap = new HashMap<>();
   }
@@ -24,6 +26,14 @@ public class TextConfigDataEntry {
 
   public Integer getInteger(String key) {
     return this.integerMap.get(key);
+  }
+
+  public void putDouble(String key, double value) {
+    this.doubleMap.put(key, value);
+  }
+
+  public Double getDouble(String key) {
+    return this.doubleMap.get(key);
   }
 
   public void putBoolean(String key, boolean value) {
