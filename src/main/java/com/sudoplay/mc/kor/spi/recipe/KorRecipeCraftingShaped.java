@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 /**
- * Created by sk3lls on 10/28/2016.
+ * Created by codetaylor on 10/28/2016.
  */
 public class KorRecipeCraftingShaped extends
     KorRecipeCrafting {

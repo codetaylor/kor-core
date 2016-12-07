@@ -7,7 +7,7 @@ import net.minecraft.item.ItemTool;
 import net.minecraftforge.common.util.EnumHelper;
 
 /**
- * Created by sk3lls on 10/29/2016.
+ * Created by codetaylor on 10/29/2016.
  */
 public class KorToolMaterial implements
     KorRegistrationStrategyProvider {

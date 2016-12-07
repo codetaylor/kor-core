@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * Mostly borrowed from {@link net.minecraft.world.gen.feature.WorldGenMinable}
  * <p>
- * Created by sk3lls on 11/21/2016.
+ * Created by codetaylor on 11/21/2016.
  */
 public class KorWorldGenMinable extends
     WorldGenerator {

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 /**
- * Created by sk3lls on 11/3/2016.
+ * Created by codetaylor on 11/3/2016.
  */
 public class KorItemToolAxeTooltip extends
     KorItemToolAxe {

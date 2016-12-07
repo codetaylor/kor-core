@@ -6,7 +6,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 /**
- * Created by sk3lls on 10/26/2016.
+ * Created by codetaylor on 10/26/2016.
  */
 public class TextConfigLoader implements
     ITextConfigLoader<TextConfigData> {

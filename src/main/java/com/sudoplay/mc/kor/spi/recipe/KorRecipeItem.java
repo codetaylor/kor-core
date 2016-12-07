@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by sk3lls on 10/28/2016.
+ * Created by codetaylor on 10/28/2016.
  */
 public class KorRecipeItem {
 

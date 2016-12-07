@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by sk3lls on 11/5/2016.
+ * Created by codetaylor on 11/5/2016.
  */
 public interface IConstructorStrategy {
 

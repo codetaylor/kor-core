@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Created by sk3lls on 11/3/2016.
+ * Created by codetaylor on 11/3/2016.
  */
 public abstract class KorSubTypedItem extends
     KorItemTooltip implements

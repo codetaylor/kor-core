@@ -8,7 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import javax.annotation.Nullable;
 
 /**
- * Created by sk3lls on 11/19/2016.
+ * Created by codetaylor on 11/19/2016.
  */
 public class KorBlockMatcher<T extends Comparable<T>> implements Predicate<IBlockState> {
 

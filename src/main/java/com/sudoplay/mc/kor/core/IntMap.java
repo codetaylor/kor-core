@@ -40,7 +40,7 @@ import java.util.Iterator;
  * href="http://code.google.com/p/skorpios/">http://code.google.com/p/skorpios/</a>
  *
  * @author Nate (original for JME)
- * @author sk3lls (modified for LSS)
+ * @author codetaylor (modified for LSS)
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class IntMap<T> implements Iterable<IntMap.Entry<T>>, Cloneable {

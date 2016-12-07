@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
 /**
- * Created by sk3lls on 11/1/2016.
+ * Created by codetaylor on 11/1/2016.
  */
 public interface KorClientInitStrategyProvider {
 

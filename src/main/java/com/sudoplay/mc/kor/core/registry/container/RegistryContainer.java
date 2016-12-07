@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by sk3lls on 10/27/2016.
+ * Created by codetaylor on 10/27/2016.
  */
 public class RegistryContainer<R> implements
     IRegistryContainer<R> {

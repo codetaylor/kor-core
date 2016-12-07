@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sk3lls on 10/27/2016.
+ * Created by codetaylor on 10/27/2016.
  */
 public class RegistryService implements
     IRegistryService {

@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.core.registry.container;
 
 /**
- * Created by sk3lls on 10/30/2016.
+ * Created by codetaylor on 10/30/2016.
  */
 public interface IRegistryContainer<R> {
 

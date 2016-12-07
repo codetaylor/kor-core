@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by sk3lls on 10/30/2016.
+ * Created by codetaylor on 10/30/2016.
  */
 public interface KorPreInitStrategy {
 

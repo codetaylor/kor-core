@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Created by sk3lls on 11/3/2016.
+ * Created by codetaylor on 11/3/2016.
  */
 public class EventDelegate {
 

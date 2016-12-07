@@ -19,7 +19,7 @@ import java.util.Set;
  * causes the lookup to fail. This class works around that by passing the damage and speed parameters
  * to the ItemTool class, bypassing the array lookup.
  * <p>
- * Created by sk3lls on 10/29/2016.
+ * Created by codetaylor on 10/29/2016.
  */
 public abstract class KorItemToolAxe extends
     ItemTool implements

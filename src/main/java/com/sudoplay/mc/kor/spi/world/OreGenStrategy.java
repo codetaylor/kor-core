@@ -5,7 +5,7 @@ import com.sudoplay.mc.kor.spi.config.json.component.common.MinMaxInt;
 import net.minecraft.block.state.IBlockState;
 
 /**
- * Created by sk3lls on 11/19/2016.
+ * Created by codetaylor on 11/19/2016.
  */
 public class OreGenStrategy {
 

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 /**
- * Created by sk3lls on 11/7/2016.
+ * Created by codetaylor on 11/7/2016.
  */
 public abstract class AbstractAssetGenerator<A extends Annotation> implements
     IAssetGenerator<A> {

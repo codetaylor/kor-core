@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by sk3lls on 11/8/2016.
+ * Created by codetaylor on 11/8/2016.
  */
 public class LangEntriesGenerator extends
     AbstractAssetGenerator<KorGenerateLangEntries> {

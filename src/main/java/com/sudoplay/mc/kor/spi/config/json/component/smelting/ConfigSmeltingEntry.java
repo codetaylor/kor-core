@@ -3,7 +3,7 @@ package com.sudoplay.mc.kor.spi.config.json.component.smelting;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 
 /**
- * Created by sk3lls on 11/12/2016.
+ * Created by codetaylor on 11/12/2016.
  */
 public class ConfigSmeltingEntry extends
     KorConfigObject {

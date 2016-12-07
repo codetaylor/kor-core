@@ -31,7 +31,7 @@ import java.util.List;
  * Inspired by:
  * https://github.com/SlimeKnights/Mantle/blob/master/src/main/java/slimeknights/mantle/block/EnumBlock.java
  * <p>
- * Created by sk3lls on 11/6/2016.
+ * Created by codetaylor on 11/6/2016.
  */
 public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
     Block implements

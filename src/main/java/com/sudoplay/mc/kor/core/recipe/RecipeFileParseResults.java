@@ -7,7 +7,7 @@ import com.sudoplay.mc.kor.core.recipe.shapeless.RecipeShapelessParseResults;
 import java.util.List;
 
 /**
- * Created by sk3lls on 11/17/2016.
+ * Created by codetaylor on 11/17/2016.
  */
 public class RecipeFileParseResults {
 

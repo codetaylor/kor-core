@@ -7,7 +7,7 @@ import com.sudoplay.mc.kor.core.log.LoggerService;
 import java.io.File;
 
 /**
- * Created by sk3lls on 11/7/2016.
+ * Created by codetaylor on 11/7/2016.
  */
 public class ModelItemSingleTextureAssetGenerator extends
     AbstractAssetGenerator<KorGenerateModelItemSingleTexture> {

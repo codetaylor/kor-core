@@ -16,7 +16,7 @@ import com.sudoplay.mc.kor.spi.registry.strategy.KorInitStrategy;
 import java.util.List;
 
 /**
- * Created by sk3lls on 11/18/2016.
+ * Created by codetaylor on 11/18/2016.
  */
 public class KorRecipeFileRegistrationDelegate extends
     KorRegistrationDelegate {

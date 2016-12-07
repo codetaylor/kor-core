@@ -3,7 +3,7 @@ package com.sudoplay.mc.kor.spi.world;
 import com.sudoplay.mc.kor.spi.config.json.component.common.MinMaxInt;
 
 /**
- * Created by sk3lls on 11/4/2016.
+ * Created by codetaylor on 11/4/2016.
  */
 public class DimensionProfile {
 

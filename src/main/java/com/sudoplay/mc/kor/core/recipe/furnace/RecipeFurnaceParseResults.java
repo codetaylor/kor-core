@@ -3,7 +3,7 @@ package com.sudoplay.mc.kor.core.recipe.furnace;
 import com.sudoplay.mc.kor.core.recipe.ParseResult;
 
 /**
- * Created by sk3lls on 11/17/2016.
+ * Created by codetaylor on 11/17/2016.
  */
 public class RecipeFurnaceParseResults {
 

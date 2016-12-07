@@ -4,7 +4,7 @@ import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 import com.sudoplay.mc.kor.spi.Kor;
 
 /**
- * Created by sk3lls on 10/30/2016.
+ * Created by codetaylor on 10/30/2016.
  */
 public interface KorRegistrationStrategy {
 

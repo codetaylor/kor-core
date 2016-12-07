@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.registry.dependency;
 
 /**
- * Created by sk3lls on 11/10/2016.
+ * Created by codetaylor on 11/10/2016.
  */
 public abstract class KorCustomDependencyRequestHandler {
 

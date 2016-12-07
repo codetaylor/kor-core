@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Marker;
  * Based on the following code:
  * https://github.com/Choonster/TestMod3/blob/13547b1247ee43f4c1e547fa72013580415e7c7d/src/main/java/choonster/testmod3/Logger.java
  * <p>
- * Created by sk3lls on 11/1/2016.
+ * Created by codetaylor on 11/1/2016.
  */
 public class LoggerService {
 

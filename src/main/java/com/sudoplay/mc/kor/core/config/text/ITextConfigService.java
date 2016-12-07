@@ -5,7 +5,7 @@ import com.sudoplay.mc.kor.spi.config.forge.KorForgeConfigurationAdapter;
 import java.io.File;
 
 /**
- * Created by sk3lls on 11/1/2016.
+ * Created by codetaylor on 11/1/2016.
  */
 public interface ITextConfigService {
   TextConfigData get(String name);

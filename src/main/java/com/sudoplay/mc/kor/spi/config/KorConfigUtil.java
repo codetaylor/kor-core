@@ -4,7 +4,7 @@ import com.sudoplay.mc.kor.core.config.text.TextConfigData;
 import net.minecraftforge.common.config.Configuration;
 
 /**
- * Created by sk3lls on 11/22/2016.
+ * Created by codetaylor on 11/22/2016.
  */
 public class KorConfigUtil {
 

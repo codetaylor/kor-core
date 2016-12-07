@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by sk3lls on 11/3/2016.
+ * Created by codetaylor on 11/3/2016.
  */
 public class EventService implements IEventService {
 

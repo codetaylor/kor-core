@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
- * Created by sk3lls on 11/8/2016.
+ * Created by codetaylor on 11/8/2016.
  */
 public class PreRegistrationVetoHandler implements
     IRegistryServicePreRegistrationHook {

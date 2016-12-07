@@ -8,7 +8,7 @@ import java.io.File;
 import java.lang.reflect.Parameter;
 
 /**
- * Created by sk3lls on 11/5/2016.
+ * Created by codetaylor on 11/5/2016.
  */
 public class TextConfigParameterStrategy implements
     IParameterStrategy<TextConfigData> {

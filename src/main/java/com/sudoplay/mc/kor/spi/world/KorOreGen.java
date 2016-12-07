@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by sk3lls on 11/4/2016.
+ * Created by codetaylor on 11/4/2016.
  */
 public class KorOreGen implements
     IWorldGenerator,

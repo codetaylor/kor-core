@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.core.config;
 
 /**
- * Created by sk3lls on 11/19/2016.
+ * Created by codetaylor on 11/19/2016.
  */
 public class MalformedItemNameException extends
     Exception {

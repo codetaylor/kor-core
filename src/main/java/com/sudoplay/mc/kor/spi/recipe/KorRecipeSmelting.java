@@ -5,7 +5,7 @@ import com.sudoplay.mc.kor.spi.registry.strategy.KorInitStrategy;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
- * Created by sk3lls on 10/28/2016.
+ * Created by codetaylor on 10/28/2016.
  */
 public class KorRecipeSmelting implements
     KorInitStrategyProvider {

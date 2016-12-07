@@ -10,7 +10,9 @@ import com.sudoplay.mc.kor.core.config.text.TextConfigService;
 import com.sudoplay.mc.kor.core.event.service.EventService;
 import com.sudoplay.mc.kor.core.event.service.IEventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
+import com.sudoplay.mc.kor.core.gui.GuiHandlerRegistry;
 import com.sudoplay.mc.kor.core.log.LoggerService;
+import com.sudoplay.mc.kor.core.network.*;
 import com.sudoplay.mc.kor.core.recipe.RecipeFileParser;
 import com.sudoplay.mc.kor.core.recipe.RecipeItemWhiteList;
 import com.sudoplay.mc.kor.core.registry.FilterBuckets;
@@ -44,6 +46,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by sk3lls on 11/1/2016.
+ * Created by codetaylor on 11/1/2016.
  */
 public abstract class Kor {
 
@@ -70,6 +73,9 @@ public abstract class Kor {
   private FilterBuckets registrationStrategyProviderBuckets;
   private RecipeItemWhiteList recipeItemWhiteList;
   private RecipeFileParser recipeFileParser;
+  private GuiHandlerRegistry guiHandlerRegistry;
+  private IPacketRegistry packetRegistry;
+  private IPacketService packetService;
 
   protected Kor() {
     String modId = this.getModId();
@@ -126,6 +132,10 @@ public abstract class Kor {
     return this.recipeFileParser;
   }
 
+  public IPacketService getPacketService() {
+    return this.packetService;
+  }
+
   // --------------------------------------------------------------------------
 
   protected void onPreInitialization(FMLPreInitializationEvent event) {
@@ -143,7 +153,7 @@ public abstract class Kor {
       ));
     }
 
-    { // Registration (init)
+    { // Registration (pre-init)
       this.loggerService.info("Kor Registration Phase...");
 
       this.eventService.publish(new OnRegisterCreativeTabsEvent(this.registryService));
@@ -152,6 +162,9 @@ public abstract class Kor {
       this.eventService.publish(new OnRegisterBlocksEvent(this.registryService));
       this.eventService.publish(new OnRegisterRecipesEvent(this.registryService));
       this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService));
+      this.eventService.publish(new OnRegisterGuiHandlersEvent(this.guiHandlerRegistry));
+
+      NetworkRegistry.INSTANCE.registerGuiHandler(this, this.guiHandlerRegistry);
 
       this.executePreInitializationStrategies(this);
     }
@@ -169,6 +182,8 @@ public abstract class Kor {
   }
 
   protected void onInitialization(FMLInitializationEvent event) {
+    this.eventService.publish(new OnRegisterNetworkPacketsEvent(this.packetRegistry));
+
     this.loggerService.info("Kor Register Recipes Phase...");
     this.executeRegisterRecipesStrategies(this);
 
@@ -271,6 +286,15 @@ public abstract class Kor {
             put(Kor.class, new KorParameterStrategy(Kor.this));
           }})
       });
+
+      this.guiHandlerRegistry = new GuiHandlerRegistry(
+          this.loggerService,
+          registryObjectInjector
+      );
+
+      ThreadedNetworkWrapper threadedNetworkWrapper = new ThreadedNetworkWrapper(this.getModId());
+      this.packetRegistry = new PacketRegistry(threadedNetworkWrapper);
+      this.packetService = new PacketService(threadedNetworkWrapper);
 
       this.registryService = new RegistryService(
           new Class[]{
