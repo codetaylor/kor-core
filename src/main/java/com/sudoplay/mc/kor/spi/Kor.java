@@ -162,6 +162,7 @@ public abstract class Kor {
       this.eventService.publish(new OnRegisterBlocksEvent(this.registryService));
       this.eventService.publish(new OnRegisterRecipesEvent(this.registryService));
       this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService));
+      this.eventService.publish(new OnRegisterEventHandlersEvent(this.registryService));
       this.eventService.publish(new OnRegisterGuiHandlersEvent(this.guiHandlerRegistry));
 
       NetworkRegistry.INSTANCE.registerGuiHandler(this, this.guiHandlerRegistry);
