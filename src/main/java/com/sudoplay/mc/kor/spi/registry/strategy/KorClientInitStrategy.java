@@ -1,9 +1,10 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
+import com.sudoplay.mc.kor.spi.block.IKorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
+import com.sudoplay.mc.kor.spi.util.StringUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.item.Item;
@@ -48,14 +49,16 @@ public interface KorClientInitStrategy {
         String name;
         int arrayLength;
         ISubType subType;
+        String resourceSubfolder;
 
         arrayLength = this.subTypes.length;
         resourceLocations = new ResourceLocation[arrayLength];
+        resourceSubfolder = StringUtils.getResourceSubfolder(this.item);
 
         for (int i = 0; i < arrayLength; ++i) {
           subType = this.subTypes[i];
           name = this.item.getRegistryName().getResourcePath() + "_" + subType.getName();
-          resourceLocations[i] = new ResourceLocation(mod.getModId(), name);
+          resourceLocations[i] = new ResourceLocation(mod.getModId(), resourceSubfolder + name);
         }
       }
 
@@ -75,14 +78,14 @@ public interface KorClientInitStrategy {
 
     SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedEnumBlock)) {
-        throw new RuntimeException("SubTypedBlock strategy requires item to extend KorSubTypedItem");
+      if (!(block instanceof IKorSubTypedEnumBlock)) {
+        throw new RuntimeException("SubTypedBlock strategy requires block to implement IKorSubTypedEnumBlock");
       }
 
       this.block = block;
 
       //noinspection unchecked
-      this.subTypes = ((KorSubTypedEnumBlock) block).getSubTypes();
+      this.subTypes = ((IKorSubTypedEnumBlock) block).getSubTypes();
     }
 
     @Override
@@ -95,10 +98,11 @@ public interface KorClientInitStrategy {
       blockName = this.block.getRegistryName().getResourcePath();
 
       int index = 0;
+      String resourceSubfolder = StringUtils.getResourceSubfolder(this.block);
 
       for (ISubType subType : this.subTypes) {
         name = blockName + "_" + subType.getName();
-        resourceLocations[index] = new ResourceLocation(mod.getModId(), name);
+        resourceLocations[index] = new ResourceLocation(mod.getModId(), resourceSubfolder + name);
         index += 1;
       }
 

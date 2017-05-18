@@ -1,5 +1,7 @@
 package com.sudoplay.mc.kor.spi.util;
 
+import com.sudoplay.mc.kor.spi.registry.IKorResourceSubfolderProvider;
+
 /**
  * Created by codetaylor on 11/16/2016.
  */
@@ -23,4 +25,17 @@ public class StringUtils {
     return newName;
   }
 
+  public static String getResourceSubfolder(Object o) {
+    String subfolder = "";
+
+    if (o instanceof IKorResourceSubfolderProvider) {
+      subfolder = ((IKorResourceSubfolderProvider) o).getSubfolder();
+      subfolder = subfolder.replaceAll("\\\\", "/");
+
+      if (!subfolder.endsWith("/")) {
+        subfolder += "/";
+      }
+    }
+    return subfolder;
+  }
 }

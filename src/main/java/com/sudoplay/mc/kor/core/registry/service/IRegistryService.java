@@ -9,4 +9,5 @@ public interface IRegistryService {
   IRegistryService register(Object registerableObject);
 
   IRegistryService register(Object... registerableObjects);
+
 }

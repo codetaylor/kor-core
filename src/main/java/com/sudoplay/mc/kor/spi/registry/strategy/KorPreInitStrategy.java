@@ -1,8 +1,9 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
+import com.sudoplay.mc.kor.spi.block.IKorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.block.IKorTileEntityProvider;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
+import com.sudoplay.mc.kor.spi.fluid.KorFluidRegistrationContainer;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItemBlock;
@@ -13,6 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -83,14 +86,14 @@ public interface KorPreInitStrategy {
   class SubTypedBlock implements
       KorPreInitStrategy {
 
-    private KorSubTypedEnumBlock block;
+    private Block block;
 
     SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedEnumBlock)) {
-        throw new IllegalArgumentException("SubTypedBlock strategy requires block to extend KorSubTypedBlock");
+      if (!(block instanceof IKorSubTypedEnumBlock)) {
+        throw new IllegalArgumentException("SubTypedBlock strategy requires block to implement IKorSubTypedBlock");
       }
-      this.block = (KorSubTypedEnumBlock) block;
+      this.block = block;
     }
 
     @Override
@@ -104,14 +107,14 @@ public interface KorPreInitStrategy {
       GameRegistry.register(korSubTypedItemBlock);
 
       //noinspection unchecked
-      validSubTypes = this.block.getSubTypes();
+      validSubTypes = ((IKorSubTypedEnumBlock) this.block).getSubTypes();
 
       if (this.block instanceof KorOreDictionaryEntryProvider) {
 
         List<KorOreDictionaryEntry> korOreDictionaryEntries;
 
         korOreDictionaryEntries = new ArrayList<>();
-        this.block.getKorOreDictionaryEntries(korOreDictionaryEntries);
+        ((KorOreDictionaryEntryProvider) this.block).getKorOreDictionaryEntries(korOreDictionaryEntries);
 
         for (KorOreDictionaryEntry entry : korOreDictionaryEntries) {
           boolean isEnabledOreDictionaryEntry;
@@ -199,7 +202,7 @@ public interface KorPreInitStrategy {
     public void onPreInit(Kor mod) {
       GameRegistry.register(this.item);
 
-      if (this.item instanceof KorOreDictionaryEntryProvider) {
+      if (this.item != null) {
 
         List<KorOreDictionaryEntry> korOreDictionaryEntries;
         ISubType[] validSubTypes;
@@ -232,4 +235,50 @@ public interface KorPreInitStrategy {
 
     }
   }
+
+  static BasicFluid createFluidPreInitRegistrationStrategy(KorFluidRegistrationContainer fluid) {
+    return new BasicFluid(fluid);
+  }
+
+  class BasicFluid implements
+      KorPreInitStrategy {
+
+    private KorFluidRegistrationContainer container;
+
+    BasicFluid(KorFluidRegistrationContainer container) {
+      this.container = container;
+    }
+
+    @Override
+    public void onPreInit(Kor kor) {
+
+      Fluid fluid = this.container.getFluid();
+
+      // this is false if a fluid has already been registered with this fluid's name
+      boolean useLocalFluid = FluidRegistry.registerFluid(fluid);
+
+      if (useLocalFluid) {
+
+        if (this.container instanceof KorFluidRegistrationContainer) {
+
+          // register block
+          KorPreInitStrategy
+              .createBasicBlockStrategy(this.container.getBlockFluid())
+              .onPreInit(kor);
+        }
+
+      } else {
+        fluid = FluidRegistry.getFluid(fluid.getName());
+      }
+
+      // this holds a reference to either our own fluid or the fluid that was already
+      // registered with the same name
+      this.container.setRegisteredFluid(fluid);
+
+      FluidRegistry.addBucketForFluid(fluid);
+
+    }
+
+  }
+
 }

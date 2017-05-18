@@ -1,14 +1,22 @@
 package com.sudoplay.mc.kor.spi.registry.strategy;
 
 import com.sudoplay.mc.kor.spi.Kor;
-import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
+import com.sudoplay.mc.kor.spi.block.IKorSubTypedEnumBlock;
+import com.sudoplay.mc.kor.spi.fluid.KorFluidRegistrationContainer;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
+import com.sudoplay.mc.kor.spi.util.StringUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.BlockFluidBase;
 
 import java.util.Collection;
 
@@ -36,7 +44,9 @@ public interface KorClientPreInitStrategy {
 
     @Override
     public void onClientPreInit(Kor mod) {
-      ResourceLocation resourceLocation = this.item.getRegistryName();
+      String resourcePath = this.item.getRegistryName().getResourcePath();
+      String resourceSubfolder = StringUtils.getResourceSubfolder(this.item);
+      ResourceLocation resourceLocation = new ResourceLocation(mod.getModId(), resourceSubfolder + resourcePath);
       ModelResourceLocation modelResourceLocation = new ModelResourceLocation(resourceLocation, "inventory");
       ModelLoader.setCustomModelResourceLocation(this.item, 0, modelResourceLocation);
     }
@@ -73,8 +83,8 @@ public interface KorClientPreInitStrategy {
 
     public SubTypedBlock(Block block) {
 
-      if (!(block instanceof KorSubTypedEnumBlock)) {
-        throw new IllegalArgumentException("EnumBlock strategy requires block to implement KorSubTypedBlock");
+      if (!(block instanceof IKorSubTypedEnumBlock)) {
+        throw new IllegalArgumentException("EnumBlock strategy requires block to implement IKorSubTypedBlock");
       }
       this.block = block;
     }
@@ -88,7 +98,7 @@ public interface KorClientPreInitStrategy {
 
       modId = mod.getModId();
 
-      KorSubTypedEnumBlock block = (KorSubTypedEnumBlock) this.block;
+      IKorSubTypedEnumBlock block = (IKorSubTypedEnumBlock) this.block;
       //noinspection unchecked
       Collection<ISubType> subTypes = block.getSubTypes();
 
@@ -97,7 +107,8 @@ public interface KorClientPreInitStrategy {
         blockName = this.block.getRegistryName().getResourcePath();
         subBlockName = blockName + "_" + subType.getName();
 
-        ResourceLocation resourceLocation = new ResourceLocation(modId, subBlockName);
+        String resourceSubfolder = StringUtils.getResourceSubfolder(this.block);
+        ResourceLocation resourceLocation = new ResourceLocation(modId, resourceSubfolder + subBlockName);
         ModelResourceLocation modelResourceLocation = new ModelResourceLocation(resourceLocation, "inventory");
         Item itemFromBlock = Item.getItemFromBlock(this.block);
 
@@ -144,11 +155,76 @@ public interface KorClientPreInitStrategy {
         itemName = this.item.getRegistryName().getResourcePath();
         subItemName = itemName + "_" + subType.getName();
 
-        ResourceLocation resourceLocation = new ResourceLocation(modId, subItemName);
+        String resourceSubfolder = StringUtils.getResourceSubfolder(this.item);
+        ResourceLocation resourceLocation = new ResourceLocation(modId, resourceSubfolder + subItemName);
         ModelResourceLocation modelResourceLocation = new ModelResourceLocation(resourceLocation, "inventory");
         ModelLoader.setCustomModelResourceLocation(this.item, meta, modelResourceLocation);
       }
     }
+  }
+
+  static BasicFluid createBasicFluidStrategy(KorFluidRegistrationContainer container) {
+    return new BasicFluid(container);
+  }
+
+  class BasicFluid implements
+      KorClientPreInitStrategy {
+
+    private KorFluidRegistrationContainer container;
+
+    BasicFluid(KorFluidRegistrationContainer container) {
+      this.container = container;
+    }
+
+    @Override
+    public void onClientPreInit(Kor kor) {
+
+      // if our fluid wasn't registered, skip registering a model for it
+      // a fluid might not register if a fluid with the same name is already registered
+      if (!this.container.isFluidRegistered()) {
+        return;
+      }
+
+      String modId;
+      String fluidName;
+      BlockFluidBase fluidBlock;
+      Item item;
+      FluidStateMapper stateMapper;
+
+      modId = kor.getModId();
+      fluidName = this.container.getFluid().getName();
+      fluidBlock = this.container.getBlockFluid();
+      stateMapper = new FluidStateMapper(modId, fluidName);
+      item = Item.getItemFromBlock(fluidBlock);
+
+      ModelBakery.registerItemVariants(item);
+      ModelLoader.setCustomMeshDefinition(item, stateMapper);
+      ModelLoader.setCustomStateMapper(fluidBlock, stateMapper);
+
+    }
+
+  }
+
+  class FluidStateMapper extends
+      StateMapperBase implements
+      ItemMeshDefinition {
+
+    private ModelResourceLocation location;
+
+    public FluidStateMapper(String modId, String name) {
+      this.location = new ModelResourceLocation(modId + ":fluids", name);
+    }
+
+    @Override
+    protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+      return this.location;
+    }
+
+    @Override
+    public ModelResourceLocation getModelLocation(ItemStack stack) {
+      return this.location;
+    }
+
   }
 
 }

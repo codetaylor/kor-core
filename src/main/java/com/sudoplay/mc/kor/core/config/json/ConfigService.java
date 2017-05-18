@@ -39,7 +39,7 @@ public class ConfigService implements IConfigService {
     File filePath = new File(this.modConfigurationDirectory, pathname);
 
     if (filePath.mkdirs()) {
-      this.loggerService.info(String.format("Created path: %s", filePath));
+      this.loggerService.debug(String.format("Created path: %s", filePath));
     }
 
     File fileJson = new File(filePath, filename);
@@ -50,7 +50,7 @@ public class ConfigService implements IConfigService {
         FileReader fileReader = new FileReader(fileJson);
         T result = this.gson.fromJson(fileReader, defaultValueClass);
         fileReader.close();
-        this.loggerService.info("Loaded json: [%s]", fileJson);
+        this.loggerService.debug("Loaded json: [%s]", fileJson);
         return result;
 
       } catch (Exception e) {
@@ -65,7 +65,7 @@ public class ConfigService implements IConfigService {
         FileWriter fileWriter = new FileWriter(fileJson);
         this.gson.toJson(defaultValue, fileWriter);
         fileWriter.close();
-        this.loggerService.info("Generated json: [%s]", fileJson);
+        this.loggerService.debug("Generated json: [%s]", fileJson);
         return defaultValue;
 
       } catch (Exception e) {

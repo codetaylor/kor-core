@@ -1,5 +1,6 @@
 package com.sudoplay.mc.kor.spi.registry.provider;
 
+import com.sudoplay.mc.kor.spi.fluid.KorFluidRegistrationContainer;
 import com.sudoplay.mc.kor.spi.registry.strategy.KorClientPreInitStrategy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -42,4 +43,13 @@ public interface KorClientPreInitStrategyProvider {
       return KorClientPreInitStrategy.createSubTypedBlockStrategy((Block) this);
     }
   }
+
+  interface BasicFluid extends KorClientPreInitStrategyProvider {
+
+    @Override
+    default KorClientPreInitStrategy getClientPreInitStrategy() {
+      return KorClientPreInitStrategy.createBasicFluidStrategy((KorFluidRegistrationContainer) this);
+    }
+  }
+
 }

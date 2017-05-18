@@ -16,4 +16,5 @@ public class OnRegisterGuiHandlersEvent {
   public GuiHandlerRegistry getGuiHandlerRegistry() {
     return this.guiHandlerRegistry;
   }
+
 }

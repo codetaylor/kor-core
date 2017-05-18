@@ -7,7 +7,7 @@ import com.sudoplay.mc.kor.spi.registry.KorOreDictionaryEntryProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientPreInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorPreInitStrategyProvider;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -31,10 +31,10 @@ import java.util.List;
  * Inspired by:
  * https://github.com/SlimeKnights/Mantle/blob/master/src/main/java/slimeknights/mantle/block/EnumBlock.java
  * <p>
- * Created by codetaylor on 11/6/2016.
+ * Created by codetaylor on 1/25/2017.
  */
-public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
-    Block implements
+public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
+    BlockFalling implements
     KorOreDictionaryEntryProvider,
     KorPreInitStrategyProvider.SubTypedBlock,
     KorClientPreInitStrategyProvider.SubTypedBlock,
@@ -50,14 +50,14 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
    */
   private final IntMap<E> subTypeIntMap;
 
-  public KorSubTypedEnumBlock(
+  public KorSubTypedEnumFallingBlock(
       String modId,
       String name,
       Material material,
       PropertyEnum<E> property,
       Class<E> enumClass
   ) {
-    super(KorSubTypedEnumBlock.hook(material, property), material.getMaterialMapColor());
+    super(KorSubTypedEnumFallingBlock.hook(material, property));
     this.property = property;
 
     E[] enumConstants = enumClass.getEnumConstants();

@@ -1,2 +1,5 @@
+0.1.2
+  * Added KorSubTypedEnumFallingBlock class
+
 0.1.1
   * Added OnRegisterEventHandlersEvent for modules to register stand-alone event handlers

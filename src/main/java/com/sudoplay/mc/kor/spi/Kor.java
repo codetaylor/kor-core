@@ -29,6 +29,7 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.Te
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 import com.sudoplay.mc.kor.spi.event.KorForgeEventSubscriber;
 import com.sudoplay.mc.kor.spi.event.internal.*;
+import com.sudoplay.mc.kor.spi.fluid.KorFluidRegistrationContainer;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
@@ -144,7 +145,7 @@ public abstract class Kor {
     korInit(event, modId);
 
     { // Configuration
-      this.loggerService.info("Kor Configuration Phase...");
+      //this.loggerService.info("Kor Configuration Phase...");
 
       this.eventService.publish(new OnLoadConfigurationsEvent(
           this.registryService,
@@ -154,16 +155,20 @@ public abstract class Kor {
     }
 
     { // Registration (pre-init)
-      this.loggerService.info("Kor Registration Phase...");
+      //this.loggerService.info("Kor Registration Phase...");
 
       this.eventService.publish(new OnRegisterCreativeTabsEvent(this.registryService));
       this.eventService.publish(new OnRegisterMaterialsEvent(this.registryService));
       this.eventService.publish(new OnRegisterItemsEvent(this.registryService));
       this.eventService.publish(new OnRegisterBlocksEvent(this.registryService));
+      this.eventService.publish(new OnRegisterFluidsEvent(this.registryService));
       this.eventService.publish(new OnRegisterRecipesEvent(this.registryService));
       this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService));
       this.eventService.publish(new OnRegisterEventHandlersEvent(this.registryService));
+      this.eventService.publish(new OnRegisterSoundsEvent(this.registryService));
       this.eventService.publish(new OnRegisterGuiHandlersEvent(this.guiHandlerRegistry));
+
+      this.eventService.publish(new OnPreInitializationCompleteEvent(this.registryService));
 
       NetworkRegistry.INSTANCE.registerGuiHandler(this, this.guiHandlerRegistry);
 
@@ -309,7 +314,8 @@ public abstract class Kor {
               KorRecipeCraftingShaped.class,
               KorRecipeSmelting.class,
               KorOreGen.class,
-              KorForgeEventSubscriber.class
+              KorForgeEventSubscriber.class,
+              KorFluidRegistrationContainer.class
           },
           registryObjectInjector,
           this.loggerService
