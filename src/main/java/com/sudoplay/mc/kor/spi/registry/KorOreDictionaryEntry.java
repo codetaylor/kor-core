@@ -9,15 +9,18 @@ public class KorOreDictionaryEntry {
   private final int meta;
 
   public KorOreDictionaryEntry(String name, int meta) {
+
     this.name = name;
     this.meta = meta;
   }
 
   public String getName() {
+
     return name;
   }
 
   public int getMeta() {
+
     return meta;
   }
 }

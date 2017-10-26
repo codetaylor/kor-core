@@ -5,8 +5,8 @@ import com.sudoplay.mc.kor.spi.registry.provider.KorInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.strategy.KorInitStrategy;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -17,13 +17,14 @@ import java.util.Random;
 /**
  * Created by codetaylor on 11/4/2016.
  */
-public class KorOreGen implements
-    IWorldGenerator,
+public class KorOreGen
+    implements IWorldGenerator,
     KorInitStrategyProvider {
 
   private IntMap<List<OreGenStrategy>> worldGenMap;
 
   public KorOreGen() {
+
     this.worldGenMap = new IntMap<>();
   }
 
@@ -31,6 +32,7 @@ public class KorOreGen implements
       int dimensionId,
       OreGenStrategy oreGenStrategy
   ) {
+
     List<OreGenStrategy> worldGenMinableList = this.worldGenMap.get(dimensionId);
 
     if (worldGenMinableList == null) {
@@ -41,9 +43,9 @@ public class KorOreGen implements
     worldGenMinableList.add(oreGenStrategy);
   }
 
-
   @Override
   public KorInitStrategy getInitStrategy() {
+
     return mod -> GameRegistry.registerWorldGenerator(this, 0);
   }
 
@@ -56,6 +58,7 @@ public class KorOreGen implements
       IChunkGenerator chunkGenerator,
       IChunkProvider chunkProvider
   ) {
+
     BlockPos chunkPos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
     int dimensionId = world.provider.getDimension();
 

@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -33,28 +34,31 @@ public interface KorPreInitStrategy {
   );
 
   static BasicBlock createBasicBlockStrategy(Block block) {
+
     return new BasicBlock(block);
   }
 
-  class BasicBlock implements
-      KorPreInitStrategy {
+  class BasicBlock
+      implements KorPreInitStrategy {
 
     private Block block;
 
     BasicBlock(Block block) {
+
       this.block = block;
     }
 
     @Override
     public void onPreInit(Kor mod) {
+
       ItemBlock itemBlock;
       ResourceLocation registryName;
 
       registryName = this.block.getRegistryName();
       itemBlock = new ItemBlock(this.block);
       itemBlock.setRegistryName(registryName);
-      GameRegistry.register(this.block);
-      GameRegistry.register(itemBlock);
+      ForgeRegistries.BLOCKS.register(this.block);
+      ForgeRegistries.ITEMS.register(itemBlock);
 
       if (this.block instanceof KorOreDictionaryEntryProvider) {
         List<KorOreDictionaryEntry> korOreDictionaryEntries;
@@ -80,11 +84,12 @@ public interface KorPreInitStrategy {
   }
 
   static SubTypedBlock createSubTypedBlockStrategy(Block block) {
+
     return new SubTypedBlock(block);
   }
 
-  class SubTypedBlock implements
-      KorPreInitStrategy {
+  class SubTypedBlock
+      implements KorPreInitStrategy {
 
     private Block block;
 
@@ -98,13 +103,14 @@ public interface KorPreInitStrategy {
 
     @Override
     public void onPreInit(Kor mod) {
+
       KorSubTypedItemBlock korSubTypedItemBlock;
       Collection<ISubType> validSubTypes;
 
       korSubTypedItemBlock = new KorSubTypedItemBlock(this.block);
       korSubTypedItemBlock.setRegistryName(this.block.getRegistryName());
-      GameRegistry.register(this.block);
-      GameRegistry.register(korSubTypedItemBlock);
+      ForgeRegistries.BLOCKS.register(this.block);
+      ForgeRegistries.ITEMS.register(korSubTypedItemBlock);
 
       //noinspection unchecked
       validSubTypes = ((IKorSubTypedEnumBlock) this.block).getSubTypes();
@@ -150,21 +156,24 @@ public interface KorPreInitStrategy {
   }
 
   static BasicItem createBasicItemStrategy(Item item) {
+
     return new BasicItem(item);
   }
 
-  class BasicItem implements
-      KorPreInitStrategy {
+  class BasicItem
+      implements KorPreInitStrategy {
 
     private Item item;
 
     BasicItem(Item item) {
+
       this.item = item;
     }
 
     @Override
     public void onPreInit(Kor mod) {
-      GameRegistry.register(this.item);
+
+      ForgeRegistries.ITEMS.register(this.item);
 
       if (this.item instanceof KorOreDictionaryEntryProvider) {
         List<KorOreDictionaryEntry> korOreDictionaryEntries;
@@ -182,11 +191,12 @@ public interface KorPreInitStrategy {
   }
 
   static SubTypedItem createSubTypedItemStrategy(Item item) {
+
     return new SubTypedItem(item);
   }
 
-  class SubTypedItem implements
-      KorPreInitStrategy {
+  class SubTypedItem
+      implements KorPreInitStrategy {
 
     private KorSubTypedItem item;
 
@@ -200,7 +210,8 @@ public interface KorPreInitStrategy {
 
     @Override
     public void onPreInit(Kor mod) {
-      GameRegistry.register(this.item);
+
+      ForgeRegistries.ITEMS.register(this.item);
 
       if (this.item != null) {
 
@@ -237,15 +248,17 @@ public interface KorPreInitStrategy {
   }
 
   static BasicFluid createFluidPreInitRegistrationStrategy(KorFluidRegistrationContainer fluid) {
+
     return new BasicFluid(fluid);
   }
 
-  class BasicFluid implements
-      KorPreInitStrategy {
+  class BasicFluid
+      implements KorPreInitStrategy {
 
     private KorFluidRegistrationContainer container;
 
     BasicFluid(KorFluidRegistrationContainer container) {
+
       this.container = container;
     }
 

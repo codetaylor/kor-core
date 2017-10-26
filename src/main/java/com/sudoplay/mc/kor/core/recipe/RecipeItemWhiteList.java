@@ -5,8 +5,8 @@ import com.sudoplay.mc.kor.spi.block.KorSubTypedEnumBlock;
 import com.sudoplay.mc.kor.spi.item.ISubType;
 import com.sudoplay.mc.kor.spi.item.KorSubTypedItem;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +24,7 @@ public class RecipeItemWhiteList {
   public RecipeItemWhiteList(
       String modId
   ) {
+
     this.modId = modId;
     this.whiteList = new ArrayList<>();
     this.recipeItemParser = new RecipeItemParser();

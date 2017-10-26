@@ -2,8 +2,6 @@ package com.sudoplay.mc.kor.spi.world;
 
 import com.google.common.base.Predicate;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -17,8 +15,8 @@ import java.util.Random;
  * <p>
  * Created by codetaylor on 11/21/2016.
  */
-public class KorWorldGenMinable extends
-    WorldGenerator {
+public class KorWorldGenMinable
+    extends WorldGenerator {
 
   /**
    * The number of blocks to generate.
@@ -32,6 +30,7 @@ public class KorWorldGenMinable extends
       KorOreGenReplacementStrategy replacementStrategy,
       Predicate<IBlockState> predicate
   ) {
+
     this.numberOfBlocks = blockCount;
     this.predicate = predicate;
     this.replacementStrategy = replacementStrategy;
@@ -43,6 +42,7 @@ public class KorWorldGenMinable extends
       @Nonnull Random random,
       @Nonnull BlockPos position
   ) {
+
     float f = random.nextFloat() * (float) Math.PI;
     double d0 = (double) ((float) (position.getX() + 8) + MathHelper.sin(f) * (float) this.numberOfBlocks / 8.0F);
     double d1 = (double) ((float) (position.getX() + 8) - MathHelper.sin(f) * (float) this.numberOfBlocks / 8.0F);
@@ -59,12 +59,12 @@ public class KorWorldGenMinable extends
       double d9 = random.nextDouble() * (double) this.numberOfBlocks / 16.0D;
       double d10 = (double) (MathHelper.sin((float) Math.PI * f1) + 1.0F) * d9 + 1.0D;
       double d11 = (double) (MathHelper.sin((float) Math.PI * f1) + 1.0F) * d9 + 1.0D;
-      int j = MathHelper.floor_double(d6 - d10 / 2.0D);
-      int k = MathHelper.floor_double(d7 - d11 / 2.0D);
-      int l = MathHelper.floor_double(d8 - d10 / 2.0D);
-      int i1 = MathHelper.floor_double(d6 + d10 / 2.0D);
-      int j1 = MathHelper.floor_double(d7 + d11 / 2.0D);
-      int k1 = MathHelper.floor_double(d8 + d10 / 2.0D);
+      int j = MathHelper.floor(d6 - d10 / 2.0D);
+      int k = MathHelper.floor(d7 - d11 / 2.0D);
+      int l = MathHelper.floor(d8 - d10 / 2.0D);
+      int i1 = MathHelper.floor(d6 + d10 / 2.0D);
+      int j1 = MathHelper.floor(d7 + d11 / 2.0D);
+      int k1 = MathHelper.floor(d8 + d10 / 2.0D);
 
       for (int l1 = j; l1 <= i1; ++l1) {
         double d12 = ((double) l1 + 0.5D - d6) / (d10 / 2.0D);

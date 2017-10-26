@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 /**
  * Fluid wrapper.
  */
-public abstract class KorFluidRegistrationContainer implements
-    KorPreInitStrategyProvider.BasicFluid,
+public abstract class KorFluidRegistrationContainer
+    implements KorPreInitStrategyProvider.BasicFluid,
     KorClientPreInitStrategyProvider.BasicFluid {
 
   private final Supplier<Fluid> fluidSupplier;
@@ -27,6 +27,7 @@ public abstract class KorFluidRegistrationContainer implements
       Supplier<Fluid> fluidSupplier,
       Function<Fluid, BlockFluidBase> fluidBlockProvider
   ) {
+
     this.fluidSupplier = fluidSupplier;
     this.fluidBlockProvider = fluidBlockProvider;
   }
@@ -50,10 +51,12 @@ public abstract class KorFluidRegistrationContainer implements
   }
 
   public void setRegisteredFluid(Fluid fluid) {
+
     this.registeredFluid = fluid;
   }
 
   public Fluid getRegisteredFluid() {
+
     return this.registeredFluid;
   }
 
@@ -64,6 +67,7 @@ public abstract class KorFluidRegistrationContainer implements
    * @return true if the fluid registered was from this mod
    */
   public boolean isFluidRegistered() {
+
     return this.fluid == this.registeredFluid;
   }
 }

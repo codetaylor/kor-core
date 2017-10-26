@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -33,8 +34,10 @@ import java.util.List;
  * <p>
  * Created by codetaylor on 1/25/2017.
  */
-public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringSerializable> extends
-    BlockFalling implements
+public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringSerializable>
+    extends
+    BlockFalling
+    implements
     KorOreDictionaryEntryProvider,
     KorPreInitStrategyProvider.SubTypedBlock,
     KorClientPreInitStrategyProvider.SubTypedBlock,
@@ -57,6 +60,7 @@ public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringS
       PropertyEnum<E> property,
       Class<E> enumClass
   ) {
+
     super(KorSubTypedEnumFallingBlock.hook(material, property));
     this.property = property;
 
@@ -73,16 +77,17 @@ public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringS
   }
 
   private static Material hook(Material material, PropertyEnum<?> property) {
+
     TEMP_PROPERTY = property;
     return material;
   }
 
   @SideOnly(Side.CLIENT)
   @Override
-  public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list) {
+  public void getSubBlocks(CreativeTabs item, NonNullList<ItemStack> itemList) {
 
     for (ISubType subType : this.property.getAllowedValues()) {
-      list.add(new ItemStack(this, 1, subType.getMeta()));
+      itemList.add(new ItemStack(this, 1, subType.getMeta()));
     }
   }
 
@@ -107,11 +112,13 @@ public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringS
 
   @Override
   public int getMetaFromState(IBlockState state) {
+
     return state.getValue(this.property).getMeta();
   }
 
   @Override
   public int damageDropped(IBlockState state) {
+
     return getMetaFromState(state);
   }
 
@@ -124,6 +131,7 @@ public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringS
       @Nonnull BlockPos pos,
       EntityPlayer player
   ) {
+
     Item itemFromBlock = Item.getItemFromBlock(this);
     assert itemFromBlock != null;
     return new ItemStack(itemFromBlock, 1, getMetaFromState(world.getBlockState(pos)));
@@ -132,16 +140,19 @@ public class KorSubTypedEnumFallingBlock<E extends Enum<E> & ISubType & IStringS
   @Override
   @Nonnull
   public List<KorOreDictionaryEntry> getKorOreDictionaryEntries(@Nonnull List<KorOreDictionaryEntry> store) {
+
     return store;
   }
 
   @Override
   public Collection<E> getSubTypes() {
+
     return this.property.getAllowedValues();
   }
 
   @Override
   public ISubType getSubType(int meta) {
+
     return this.subTypeIntMap.get(meta);
   }
 }

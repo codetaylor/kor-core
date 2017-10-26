@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.util;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
@@ -18,9 +18,10 @@ public class GuiUtils {
       int width,
       int height
   ) {
+
     Tessellator tessellator = Tessellator.getInstance();
-    VertexBuffer vertexbuffer = tessellator.getBuffer();
-    vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+    BufferBuilder bufferBuilder = tessellator.getBuffer();
+    bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
     double x;
     double y;
@@ -33,28 +34,28 @@ public class GuiUtils {
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord + height);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getInterpolatedV(textureSprite.getIconHeight() - height);
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getInterpolatedV(textureSprite.getIconHeight() - height);
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     tessellator.draw();
   }
@@ -67,9 +68,10 @@ public class GuiUtils {
       int width,
       int height
   ) {
+
     Tessellator tessellator = Tessellator.getInstance();
-    VertexBuffer vertexbuffer = tessellator.getBuffer();
-    vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+    BufferBuilder bufferBuilder = tessellator.getBuffer();
+    bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
     double x;
     double y;
@@ -82,28 +84,28 @@ public class GuiUtils {
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord + height);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     tessellator.draw();
   }
@@ -116,9 +118,10 @@ public class GuiUtils {
       int width,
       int height
   ) {
+
     Tessellator tessellator = Tessellator.getInstance();
-    VertexBuffer vertexbuffer = tessellator.getBuffer();
-    vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+    BufferBuilder bufferBuilder = tessellator.getBuffer();
+    bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
     double x;
     double y;
@@ -131,28 +134,28 @@ public class GuiUtils {
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord + height);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     tessellator.draw();
   }
@@ -165,9 +168,10 @@ public class GuiUtils {
       int width,
       int height
   ) {
+
     Tessellator tessellator = Tessellator.getInstance();
-    VertexBuffer vertexbuffer = tessellator.getBuffer();
-    vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+    BufferBuilder bufferBuilder = tessellator.getBuffer();
+    bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
 
     double x;
     double y;
@@ -180,28 +184,28 @@ public class GuiUtils {
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord + height);
     z = (double) zLevel;
     u = (double) textureSprite.getMinU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord + width);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMaxV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     x = (double) (xCoord);
     y = (double) (yCoord);
     z = (double) zLevel;
     u = (double) textureSprite.getMaxU();
     v = (double) textureSprite.getMinV();
-    vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+    bufferBuilder.pos(x, y, z).tex(u, v).endVertex();
 
     tessellator.draw();
   }

@@ -5,18 +5,17 @@ import com.sudoplay.mc.kor.spi.registry.provider.KorClientInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorClientPreInitStrategyProvider;
 import com.sudoplay.mc.kor.spi.registry.provider.KorPreInitStrategyProvider;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Created by codetaylor on 11/3/2016.
  */
-public abstract class KorSubTypedItem extends
-    KorItemTooltip implements
-    KorOreDictionaryEntryProvider,
+public abstract class KorSubTypedItem
+    extends KorItemTooltip
+    implements KorOreDictionaryEntryProvider,
     KorPreInitStrategyProvider.SubTypedItem,
     KorClientPreInitStrategyProvider.SubTypedItem,
     KorClientInitStrategyProvider.SubTypedItem {
@@ -24,21 +23,22 @@ public abstract class KorSubTypedItem extends
   private ISubType[] subTypes;
 
   public KorSubTypedItem(String modId, String name, ISubType[] subTypes) {
+
     super(modId, name);
     this.subTypes = subTypes;
   }
 
   @Override
-  public void getSubItems(@Nonnull Item item, CreativeTabs creativeTabs, List<ItemStack> subItems) {
+  public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> itemList) {
 
     if (this.subTypes.length > 0) {
 
       for (ISubType subType : this.subTypes) {
-        subItems.add(new ItemStack(item, 1, subType.getMeta()));
+        itemList.add(new ItemStack(this, 1, subType.getMeta()));
       }
 
     } else {
-      subItems.add(new ItemStack(item));
+      itemList.add(new ItemStack(this));
     }
 
   }
@@ -58,6 +58,7 @@ public abstract class KorSubTypedItem extends
   }
 
   public ISubType[] getSubTypes() {
+
     return this.subTypes;
   }
 

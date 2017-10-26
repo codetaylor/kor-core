@@ -2,31 +2,37 @@ package com.sudoplay.mc.kor.spi.item;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Created by codetaylor on 11/3/2016.
  */
-public abstract class KorItemTooltip extends
+public abstract class KorItemTooltip
+    extends
     Item {
 
   public KorItemTooltip(String modId, String name) {
+
     this.setUnlocalizedName(name);
     this.setRegistryName(modId, name);
   }
 
   @Override
-  public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+  public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+
     KorItemTooltip.createTooltip(stack, tooltip);
-    super.addInformation(stack, playerIn, tooltip, advanced);
+    super.addInformation(stack, worldIn, tooltip, flagIn);
   }
 
   public static void createTooltip(ItemStack stack, List<String> tooltip) {
+
     String key = stack.getUnlocalizedName() + ".tooltip";
     if (I18n.hasKey(key)) {
       tooltip.addAll(KorItemTooltip.getTooltips(
@@ -42,9 +48,11 @@ public abstract class KorItemTooltip extends
    * @return
    */
   private static List<String> getTooltips(String text) {
+
     List<String> list = Lists.newLinkedList();
-    if (text == null)
+    if (text == null) {
       return list;
+    }
     int j = 0;
     int k;
     while ((k = text.indexOf("\\n", j)) >= 0) {

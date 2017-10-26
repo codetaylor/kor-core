@@ -32,8 +32,6 @@ import com.sudoplay.mc.kor.spi.event.internal.*;
 import com.sudoplay.mc.kor.spi.fluid.KorFluidRegistrationContainer;
 import com.sudoplay.mc.kor.spi.material.KorArmorMaterial;
 import com.sudoplay.mc.kor.spi.material.KorToolMaterial;
-import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShaped;
-import com.sudoplay.mc.kor.spi.recipe.KorRecipeCraftingShapeless;
 import com.sudoplay.mc.kor.spi.recipe.KorRecipeSmelting;
 import com.sudoplay.mc.kor.spi.registry.ForgeEventListener;
 import com.sudoplay.mc.kor.spi.registry.KorRegistrationDelegate;
@@ -79,6 +77,7 @@ public abstract class Kor {
   private IPacketService packetService;
 
   protected Kor() {
+
     String modId = this.getModId();
     INSTANCES.put(modId, this);
     this.moduleMap = new HashMap<>();
@@ -92,7 +91,8 @@ public abstract class Kor {
 
     { // Registration Event Service
       if (this.eventService == null) {
-        this.eventService = new EventService(new LogErrorEventExceptionHandler(new LoggerService(LogManager.getLogger("KorEventService"))));
+        this.eventService = new EventService(new LogErrorEventExceptionHandler(new LoggerService(LogManager.getLogger(
+            "KorEventService"))));
       }
     }
   }
@@ -122,24 +122,29 @@ public abstract class Kor {
    * @return registered instance of class parameter
    */
   public <R> R get(Class<R> registerableClass) {
+
     return this.registryService.get(registerableClass);
   }
 
   public LoggerService getLoggerService() {
+
     return this.loggerService;
   }
 
   public RecipeFileParser getRecipeFileParser() {
+
     return this.recipeFileParser;
   }
 
   public IPacketService getPacketService() {
+
     return this.packetService;
   }
 
   // --------------------------------------------------------------------------
 
   protected void onPreInitialization(FMLPreInitializationEvent event) {
+
     String modId = this.getModId();
 
     korInit(event, modId);
@@ -176,11 +181,8 @@ public abstract class Kor {
     }
 
     { // Register Renders
-      boolean isClient;
 
-      isClient = event.getSide().isClient();
-
-      if (isClient) {
+      if (event.getSide().isClient()) {
         this.loggerService.info("Kor Client Registration Phase...");
         this.executeClientPreInitializationStrategies(this);
       }
@@ -188,22 +190,25 @@ public abstract class Kor {
   }
 
   protected void onInitialization(FMLInitializationEvent event) {
+
     this.eventService.publish(new OnRegisterNetworkPacketsEvent(this.packetRegistry));
 
-    this.loggerService.info("Kor Register Recipes Phase...");
+    //this.loggerService.info("Kor Register Recipes Phase...");
     this.executeRegisterRecipesStrategies(this);
 
     if (event.getSide().isClient()) {
-      this.loggerService.info("Kor Register Model Bakery Variants Phase...");
+      //this.loggerService.info("Kor Register Model Bakery Variants Phase...");
       this.executeRegisterModelBakeryVariantStrategies(this);
     }
   }
 
   protected void onPostInitialization(FMLPostInitializationEvent event) {
+
     this.registrationStrategyProviderBuckets = null;
   }
 
   private void executePreInitializationStrategies(Kor kor) {
+
     List<KorPreInitStrategyProvider> bucket = this.registrationStrategyProviderBuckets
         .getBucket(KorPreInitStrategyProvider.class);
 
@@ -215,6 +220,7 @@ public abstract class Kor {
   }
 
   private void executeClientPreInitializationStrategies(Kor kor) {
+
     List<KorClientPreInitStrategyProvider> bucket = this.registrationStrategyProviderBuckets
         .getBucket(KorClientPreInitStrategyProvider.class);
 
@@ -226,6 +232,7 @@ public abstract class Kor {
   }
 
   private void executeRegisterModelBakeryVariantStrategies(Kor kor) {
+
     List<KorClientInitStrategyProvider> bucket = this.registrationStrategyProviderBuckets
         .getBucket(KorClientInitStrategyProvider.class);
 
@@ -237,6 +244,7 @@ public abstract class Kor {
   }
 
   private void executeRegisterRecipesStrategies(Kor kor) {
+
     List<KorInitStrategyProvider> bucket = this.registrationStrategyProviderBuckets
         .getBucket(KorInitStrategyProvider.class);
 
@@ -250,6 +258,7 @@ public abstract class Kor {
   // --------------------------------------------------------------------------
 
   private void korInit(FMLPreInitializationEvent event, String modId) {
+
     File modConfigurationDirectory = new File(event.getModConfigurationDirectory(), modId);
 
     { // Init Configuration Services
@@ -310,8 +319,6 @@ public abstract class Kor {
               KorRegistrationDelegate.class,
               KorArmorMaterial.class,
               KorToolMaterial.class,
-              KorRecipeCraftingShapeless.class,
-              KorRecipeCraftingShaped.class,
               KorRecipeSmelting.class,
               KorOreGen.class,
               KorForgeEventSubscriber.class,

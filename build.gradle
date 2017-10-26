@@ -4,7 +4,7 @@ buildscript {
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -18,8 +18,8 @@ def getVersionName = { String workTree ->
     return stdout.toString().trim()
 }
 
-project.ext.mcversion = "1.10.2"
-version = project.mcversion + "-" + getVersionName("${project.projectDir}")
+project.ext.mcversion = "1.12.2"
+version = getVersionName("${project.projectDir}")
 group = "com.sudoplay.mc.kor"
 archivesBaseName = "ctkorlib"
 
@@ -52,7 +52,7 @@ compileJava {
 }
 
 minecraft {
-    version = project.ext.mcversion + "-12.18.2.2151"
+    version = project.ext.mcversion + "-14.23.0.2515"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -60,7 +60,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20170624"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 

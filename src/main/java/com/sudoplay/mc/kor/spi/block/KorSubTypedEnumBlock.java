@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -79,10 +80,10 @@ public class KorSubTypedEnumBlock<E extends Enum<E> & ISubType & IStringSerializ
 
   @SideOnly(Side.CLIENT)
   @Override
-  public void getSubBlocks(@Nonnull Item item, CreativeTabs tab, List<ItemStack> list) {
+  public void getSubBlocks(CreativeTabs item, NonNullList<ItemStack> itemList) {
 
     for (ISubType subType : this.property.getAllowedValues()) {
-      list.add(new ItemStack(this, 1, subType.getMeta()));
+      itemList.add(new ItemStack(this, 1, subType.getMeta()));
     }
   }
 
