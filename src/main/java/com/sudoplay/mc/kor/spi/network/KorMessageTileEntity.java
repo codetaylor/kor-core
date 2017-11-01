@@ -2,11 +2,14 @@ package com.sudoplay.mc.kor.spi.network;
 
 import com.google.common.reflect.TypeToken;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * https://github.com/SleepyTrousers/EnderCore/blob/1.10/src/main/java/com/enderio/core/common/network/MessageTileEntity.java
@@ -44,7 +47,7 @@ public abstract class KorMessageTileEntity<T extends TileEntity>
     return BlockPos.fromLong(this.pos);
   }
 
-  protected T getTileEntity(World world) {
+  public T getTileEntity(World world) {
 
     if (world == null) {
       return null;
@@ -67,8 +70,13 @@ public abstract class KorMessageTileEntity<T extends TileEntity>
     return null;
   }
 
-  protected World getWorld(MessageContext context) {
+  public World getWorld(MessageContext context) {
 
-    return context.getServerHandler().player.world;
+    if (context.side == Side.CLIENT) {
+      return Minecraft.getMinecraft().world;
+
+    } else {
+      return context.getServerHandler().player.world;
+    }
   }
 }

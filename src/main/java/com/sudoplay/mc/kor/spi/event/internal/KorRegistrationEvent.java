@@ -15,10 +15,12 @@ public abstract class KorRegistrationEvent {
   public KorRegistrationEvent(
       IRegistryService registryService
   ) {
+
     this.registryService = registryService;
   }
 
   public IRegistryService getRegistryService() {
+
     return registryService;
   }
 }

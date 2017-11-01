@@ -11,6 +11,7 @@ public class RegistryObjectInjector {
   private IConstructorStrategy[] strategyList;
 
   public RegistryObjectInjector(IConstructorStrategy[] strategyList) {
+
     this.strategyList = strategyList;
   }
 
@@ -39,6 +40,7 @@ public class RegistryObjectInjector {
       Constructor constructor,
       IConstructorStrategy strategy
   ) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+
     boolean wasAccessible = constructor.isAccessible();
     constructor.setAccessible(true);
     Object o = strategy.instantiate(constructor);

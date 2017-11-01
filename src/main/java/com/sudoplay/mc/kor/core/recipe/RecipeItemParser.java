@@ -29,7 +29,7 @@ public class RecipeItemParser {
 
     String[] pathSplit = split[1].split("\\*");
 
-    result.setPath(pathSplit[0]);
+    result.setPath(pathSplit[0].trim());
 
     if (pathSplit.length > 1) {
 

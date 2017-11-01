@@ -1,12 +1,11 @@
 package com.sudoplay.mc.kor.spi;
 
 import com.google.gson.GsonBuilder;
-import com.sudoplay.mc.kor.core.config.json.ConfigService;
-import com.sudoplay.mc.kor.core.config.json.IConfigService;
-import com.sudoplay.mc.kor.core.config.text.ITextConfigService;
-import com.sudoplay.mc.kor.core.config.text.TextConfigData;
-import com.sudoplay.mc.kor.core.config.text.TextConfigLoader;
-import com.sudoplay.mc.kor.core.config.text.TextConfigService;
+import com.sudoplay.mc.kor.core.config.json.JsonConfigService;
+import com.sudoplay.mc.kor.core.config.json.IJsonConfigService;
+import com.sudoplay.mc.kor.core.config.text.IConfigurationService;
+import com.sudoplay.mc.kor.core.config.text.ConfigurationLoader;
+import com.sudoplay.mc.kor.core.config.text.ConfigurationService;
 import com.sudoplay.mc.kor.core.event.service.EventService;
 import com.sudoplay.mc.kor.core.event.service.IEventService;
 import com.sudoplay.mc.kor.core.event.service.LogErrorEventExceptionHandler;
@@ -25,7 +24,7 @@ import com.sudoplay.mc.kor.core.registry.service.injection.strategy.constructor.
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.ConfigParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.IParameterStrategy;
 import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.KorParameterStrategy;
-import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.TextConfigParameterStrategy;
+import com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter.ConfigurationParameterStrategy;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 import com.sudoplay.mc.kor.spi.event.KorForgeEventSubscriber;
 import com.sudoplay.mc.kor.spi.event.internal.*;
@@ -42,6 +41,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -66,8 +66,8 @@ public abstract class Kor {
 
   private IEventService eventService;
   private LoggerService loggerService;
-  private ITextConfigService textConfigService;
-  private IConfigService configService;
+  private IConfigurationService textConfigService;
+  private IJsonConfigService configService;
   private RegistryService registryService;
   private FilterBuckets registrationStrategyProviderBuckets;
   private RecipeItemWhiteList recipeItemWhiteList;
@@ -167,7 +167,7 @@ public abstract class Kor {
       this.eventService.publish(new OnRegisterItemsEvent(this.registryService));
       this.eventService.publish(new OnRegisterBlocksEvent(this.registryService));
       this.eventService.publish(new OnRegisterFluidsEvent(this.registryService));
-      this.eventService.publish(new OnRegisterRecipesEvent(this.registryService));
+      this.eventService.publish(new OnRegisterRecipesEvent(this.registryService, this.configService));
       this.eventService.publish(new OnRegisterWorldGenEvent(this.registryService));
       this.eventService.publish(new OnRegisterEventHandlersEvent(this.registryService));
       this.eventService.publish(new OnRegisterSoundsEvent(this.registryService));
@@ -262,8 +262,8 @@ public abstract class Kor {
     File modConfigurationDirectory = new File(event.getModConfigurationDirectory(), modId);
 
     { // Init Configuration Services
-      this.textConfigService = new TextConfigService(new TextConfigLoader(), modConfigurationDirectory);
-      this.configService = new ConfigService(
+      this.textConfigService = new ConfigurationService(new ConfigurationLoader(), modConfigurationDirectory);
+      this.configService = new JsonConfigService(
           this.loggerService,
           modConfigurationDirectory,
           new GsonBuilder()
@@ -296,15 +296,14 @@ public abstract class Kor {
       RegistryObjectInjector registryObjectInjector = new RegistryObjectInjector(new IConstructorStrategy[]{
           new NoArgConstructorStrategy(),
           new ArgConstructorStrategy(new LinkedHashMap<Class<?>, IParameterStrategy>() {{
-            put(TextConfigData.class, new TextConfigParameterStrategy(Kor.this.textConfigService));
+            put(Configuration.class, new ConfigurationParameterStrategy(Kor.this.textConfigService));
             put(KorConfigObject.class, new ConfigParameterStrategy(Kor.this.configService));
             put(Kor.class, new KorParameterStrategy(Kor.this));
           }})
       });
 
       this.guiHandlerRegistry = new GuiHandlerRegistry(
-          this.loggerService,
-          registryObjectInjector
+          this.loggerService
       );
 
       ThreadedNetworkWrapper threadedNetworkWrapper = new ThreadedNetworkWrapper(this.getModId());
@@ -329,9 +328,7 @@ public abstract class Kor {
       );
 
       this.registryService.addPreRegistrationHook(new PreRegistrationVetoHandler(
-          this.textConfigService,
-          this.loggerService,
-          registryObjectInjector
+          this.loggerService
       ));
 
       this.registryService.addPostRegistrationHook(registeredObject -> {

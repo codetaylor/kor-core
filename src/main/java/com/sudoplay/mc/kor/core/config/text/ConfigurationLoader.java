@@ -8,15 +8,14 @@ import java.io.File;
 /**
  * Created by codetaylor on 10/26/2016.
  */
-public class TextConfigLoader implements
-    ITextConfigLoader<TextConfigData> {
+public class ConfigurationLoader
+    implements IConfigurationLoader {
 
   @Override
-  public TextConfigData loadConfiguration(
-      File configurationFile,
-      TextConfigData textConfigData,
-      KorForgeConfigurationAdapter... modConfigurationAdapters
+  public Configuration loadConfiguration(
+      File configurationFile
   ) {
+
     Configuration configuration;
 
     //noinspection ResultOfMethodCallIgnored
@@ -24,13 +23,10 @@ public class TextConfigLoader implements
 
     configuration = new Configuration(configurationFile);
 
-    for (KorForgeConfigurationAdapter adapter : modConfigurationAdapters) {
-      //noinspection unchecked
-      adapter.adapt(configuration, textConfigData);
-    }
-
+    // TODO: is this necessary?
     configuration.save();
 
-    return textConfigData;
+    return configuration;
   }
+
 }

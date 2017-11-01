@@ -5,5 +5,5 @@ package com.sudoplay.mc.kor.spi.registry;
  */
 public interface IKorResourceSubfolderProvider {
 
-  String getSubfolder();
+  String getResourceSubfolder();
 }

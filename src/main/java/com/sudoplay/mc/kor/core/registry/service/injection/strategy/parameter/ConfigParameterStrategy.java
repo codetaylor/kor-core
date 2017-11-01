@@ -1,6 +1,6 @@
 package com.sudoplay.mc.kor.core.registry.service.injection.strategy.parameter;
 
-import com.sudoplay.mc.kor.core.config.json.IConfigService;
+import com.sudoplay.mc.kor.core.config.json.IJsonConfigService;
 import com.sudoplay.mc.kor.spi.config.json.KorConfigObject;
 import com.sudoplay.mc.kor.spi.registry.injection.KorJsonConfig;
 
@@ -12,10 +12,10 @@ import java.lang.reflect.Parameter;
 public class ConfigParameterStrategy implements
     IParameterStrategy<KorConfigObject> {
 
-  private IConfigService configService;
+  private IJsonConfigService configService;
 
   public ConfigParameterStrategy(
-      IConfigService configService
+      IJsonConfigService configService
   ) {
     this.configService = configService;
   }

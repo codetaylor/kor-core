@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -20,9 +21,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by codetaylor on 10/30/2016.
@@ -75,10 +74,8 @@ public interface KorPreInitStrategy {
 
       if (this.block instanceof IKorTileEntityProvider) {
         IKorTileEntityProvider tileEntityProvider = (IKorTileEntityProvider) this.block;
-        GameRegistry.registerTileEntity(
-            tileEntityProvider.getTileEntityClass(),
-            tileEntityProvider.getTileEntityName()
-        );
+        Map<String, Class<? extends TileEntity>> tileEntityMap = tileEntityProvider.getTileEntityMap(new HashMap<>());
+        tileEntityMap.forEach((name, tileEntityClass) -> GameRegistry.registerTileEntity(tileEntityClass, name));
       }
     }
   }
@@ -147,10 +144,8 @@ public interface KorPreInitStrategy {
 
       if (this.block instanceof IKorTileEntityProvider) {
         IKorTileEntityProvider tileEntityProvider = (IKorTileEntityProvider) this.block;
-        GameRegistry.registerTileEntity(
-            tileEntityProvider.getTileEntityClass(),
-            tileEntityProvider.getTileEntityName()
-        );
+        Map<String, Class<? extends TileEntity>> tileEntityMap = tileEntityProvider.getTileEntityMap(new HashMap<>());
+        tileEntityMap.forEach((name, tileEntityClass) -> GameRegistry.registerTileEntity(tileEntityClass, name));
       }
     }
   }

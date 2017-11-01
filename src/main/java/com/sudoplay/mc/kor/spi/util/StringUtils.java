@@ -9,27 +9,27 @@ public class StringUtils {
 
   /**
    * Takes a name written in snake-case, like_this or like_another_example, and
-   * returns a camel-case version, LikeThis or LikeAnotherExample.
+   * returns a PascalCase version, LikeThis or LikeAnotherExample.
    *
    * @param name the snake_case to convert
-   * @return the CamelCase result
+   * @return the PascalCase result
    */
-  public static String convertSnakeCaseToCamelCase(String name) {
+  public static String convertSnakeCaseToPascalCase(String name) {
     String[] parts = name.split("_");
-    String newName = "";
+    StringBuilder newName = new StringBuilder();
 
     for (String part : parts) {
-      newName += part.substring(0, 1).toUpperCase() + part.substring(1);
+      newName.append(part.substring(0, 1).toUpperCase()).append(part.substring(1));
     }
 
-    return newName;
+    return newName.toString();
   }
 
   public static String getResourceSubfolder(Object o) {
     String subfolder = "";
 
     if (o instanceof IKorResourceSubfolderProvider) {
-      subfolder = ((IKorResourceSubfolderProvider) o).getSubfolder();
+      subfolder = ((IKorResourceSubfolderProvider) o).getResourceSubfolder();
       subfolder = subfolder.replaceAll("\\\\", "/");
 
       if (!subfolder.endsWith("/")) {

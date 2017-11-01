@@ -10,18 +10,21 @@ import static net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 /**
  * Created by codetaylor on 12/3/2016.
  */
-public class PacketService implements IPacketService {
+public class PacketService
+    implements IPacketService {
 
   private static final int DEFAULT_RANGE = 64;
 
   private ThreadedNetworkWrapper threadedNetworkWrapper;
 
   public PacketService(ThreadedNetworkWrapper threadedNetworkWrapper) {
+
     this.threadedNetworkWrapper = threadedNetworkWrapper;
   }
 
   @Override
   public void sendToAllAround(IMessage message, TileEntity tileEntity, int range) {
+
     BlockPos pos = tileEntity.getPos();
     int dimension = tileEntity.getWorld().provider.getDimension();
     TargetPoint point = new TargetPoint(dimension, pos.getX(), pos.getY(), pos.getZ(), range);
@@ -31,11 +34,19 @@ public class PacketService implements IPacketService {
 
   @Override
   public void sendToAllAround(IMessage message, TileEntity tileEntity) {
+
     this.sendToAllAround(message, tileEntity, DEFAULT_RANGE);
   }
 
   @Override
   public void sendTo(IMessage message, EntityPlayerMP player) {
+
     this.threadedNetworkWrapper.sendTo(message, player);
+  }
+
+  @Override
+  public void sendToServer(IMessage message) {
+
+    this.threadedNetworkWrapper.sendToServer(message);
   }
 }

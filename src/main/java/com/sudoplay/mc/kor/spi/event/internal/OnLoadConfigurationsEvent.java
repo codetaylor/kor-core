@@ -1,7 +1,7 @@
 package com.sudoplay.mc.kor.spi.event.internal;
 
-import com.sudoplay.mc.kor.core.config.json.IConfigService;
-import com.sudoplay.mc.kor.core.config.text.ITextConfigService;
+import com.sudoplay.mc.kor.core.config.json.IJsonConfigService;
+import com.sudoplay.mc.kor.core.config.text.IConfigurationService;
 import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 
 /**
@@ -10,24 +10,24 @@ import com.sudoplay.mc.kor.core.registry.service.IRegistryService;
 public class OnLoadConfigurationsEvent {
 
   private IRegistryService registryService;
-  private ITextConfigService configurationService;
-  private IConfigService jsonService;
+  private IConfigurationService configurationService;
+  private IJsonConfigService jsonService;
 
   public OnLoadConfigurationsEvent(
       IRegistryService registryService,
-      ITextConfigService configurationService,
-      IConfigService jsonService
+      IConfigurationService configurationService,
+      IJsonConfigService jsonService
   ) {
     this.registryService = registryService;
     this.configurationService = configurationService;
     this.jsonService = jsonService;
   }
 
-  public ITextConfigService getConfigurationService() {
+  public IConfigurationService getConfigurationService() {
     return this.configurationService;
   }
 
-  public IConfigService getJsonService() {
+  public IJsonConfigService getJsonService() {
     return this.jsonService;
   }
 

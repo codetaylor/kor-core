@@ -6,17 +6,19 @@ import java.util.Map;
 /**
  * Created by codetaylor on 10/27/2016.
  */
-public class RegistryContainer<R> implements
-    IRegistryContainer<R> {
+public class RegistryContainer<R>
+    implements IRegistryContainer<R> {
 
   private Map<Class<?>, R> itemMap;
 
   public RegistryContainer() {
+
     this.itemMap = new HashMap<>();
   }
 
   @Override
   public void register(R registerable) {
+
     Class<?> aClass = registerable.getClass();
     R existingItem = this.itemMap.get(aClass);
 
